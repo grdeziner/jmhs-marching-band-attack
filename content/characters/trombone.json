@@ -1,13 +1,16 @@
 {
   "id": "trombone",
-  "name": "Trombone",
-  "section": "Brass",
+  "name": "Theo \"Slide\" Washington",
+  "section": "Low Brass",
   "instrument": "Trombone",
-  "fightingStyle": "",
-  "personality": "",
-  "rivals": [],
-  "whyTheyFight": "",
-  "taunt": "",
-  "winQuote": "",
-  "ending": ""
+  "fightingStyle": "Long-range spacer. The slide shoots out for long pokes and sweeps, so he controls distance better than anyone. His glissando special slides him across the screen in one fast rush.",
+  "personality": "Laid-back and funny, the class clown of the low brass. Hard to rattle, and smarter than he lets on.",
+  "rivals": [
+    "trumpet",
+    "tuba"
+  ],
+  "whyTheyFight": "Theo is tired of trumpets acting like they own the brass section. He also heard the winner gets to pick the post-game playlist at the fast food place, and he has opinions.",
+  "taunt": "Mind the slide. Actually, don't. It's funnier.",
+  "winQuote": "Glissando'd. Look it up.",
+  "ending": "Theo wins, picks the post-game playlist, and turns the fast food restaurant into a dance party until closing time. The manager makes him promise never to slide-trombone near the milkshake machine again."
 }

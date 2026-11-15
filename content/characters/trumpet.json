@@ -1,13 +1,16 @@
 {
   "id": "trumpet",
-  "name": "Trumpet",
-  "section": "Brass",
+  "name": "Dante \"High C\" Reyes",
+  "section": "High Brass",
   "instrument": "Trumpet",
-  "fightingStyle": "",
-  "personality": "",
-  "rivals": [],
-  "whyTheyFight": "",
-  "taunt": "",
-  "winQuote": "",
-  "ending": ""
+  "fightingStyle": "Flashy rushdown. Fast punches and a piercing high-note blast fired as a projectile. His super is a screaming high C fanfare that pushes opponents back across the screen.",
+  "personality": "Loud, confident and a bit of a show-off. Always wants to be in the spotlight and usually is. Deep down he's loyal to his section.",
+  "rivals": [
+    "trombone",
+    "flute"
+  ],
+  "whyTheyFight": "Dante wants the lead part in the stadium fanfare and the right to say the trumpets are the real stars of JMHS. Band Wars is the best stage he can find.",
+  "taunt": "Hear that? That's the sound of first chair.",
+  "winQuote": "Too high for you? Everything is.",
+  "ending": "Dante blasts the victory fanfare from the top row of the bleachers at the final home game, and the note echoes off the press box. Then he gives the last chord to his whole section, learning that a fanfare sounds better with more than one trumpet."
 }

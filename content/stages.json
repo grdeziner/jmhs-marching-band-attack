@@ -1,23 +1,23 @@
 {
-  "canvas": { "width": 320, "height": 180 },
-  "native": { "width": 640, "height": 360 },
-  "floorY": 320,
-  "drawOrder": ["far.png", "mid.png", "fighters", "anim_N.png"],
+  "_readme": "Stages. Art: art/stages/<id>/far.png (640x360), mid.png + anim_0..3.png (960x360, drawn at x=-160 when centred, 160px parallax margin each side), floor y=320, anims cycle at 7 fps. Music: musicFile (its BPM is authoritative). Add a stage by adding an entry + art folder + song module.",
   "stages": [
     {
       "id": "football",
-      "name": "Football Field",
-      "description": "Football field at night."
+      "name": "FRIDAY NIGHT LIGHTS",
+      "subtitle": "JMHS Stadium - Halftime",
+      "musicFile": "audio/music/football.js"
     },
     {
       "id": "lockerroom",
-      "name": "Locker Room",
-      "description": "Locker room."
+      "name": "BAND LOCKER ROOM",
+      "subtitle": "Before the bus call",
+      "musicFile": "audio/music/lockerroom.js"
     },
     {
       "id": "fastfood",
-      "name": "Fast Food",
-      "description": "A generic fast food restaurant."
+      "name": "AFTER-GAME DRIVE-IN",
+      "subtitle": "Burger stop, 11:40 PM",
+      "musicFile": "audio/music/fastfood.js"
     }
   ]
 }

@@ -1,49 +1,392 @@
 {
+  "_readme": "Editable roster. 'enabled' fighters appear on the select grid in 'order'. 'look' drives the placeholder art (ignored when art/characters/<id>/sheet.png exists). 'special'/'super' pick a move 'type' from src/moves.js and tune it with the numbers here. Story text (name/taunt/winQuote/ending) in content/characters/<id>.json overrides what is here. Story fields come from content/characters/<id>.json; the empty taunt/winQuote here are fallbacks.",
+  "settings": {
+    "roundsToWin": 2,
+    "roundTime": 99,
+    "cpuDifficulty": 2
+  },
   "fighters": [
     {
       "id": "drummer",
-      "name": "Drummer",
-      "placeholder": "Bass drum. Sound shockwaves."
+      "enabled": true,
+      "order": 1,
+      "name": "MARCUS \"THUNDER\" BOONE",
+      "section": "Percussion (Battery)",
+      "instrument": "Bass Drum (Drumline)",
+      "stats": {
+        "health": 1000,
+        "walk": 2.6,
+        "jump": 11.5,
+        "power": 1.0
+      },
+      "look": {
+        "jacket": "#17305f",
+        "trim": "#d4a017",
+        "pants": "#0c1734",
+        "skin": "#c68642",
+        "hair": "#1a1a1a",
+        "plume": "#d4a017",
+        "build": "normal"
+      },
+      "special": {
+        "type": "projectile",
+        "name": "DOWNBEAT SHOCKWAVE",
+        "damage": 60,
+        "speed": 5.5,
+        "kind": "wave",
+        "color": "#f5de6a",
+        "sound": "bassdrum",
+        "knockdown": false
+      },
+      "super": {
+        "type": "barrage",
+        "name": "THUNDER CADENCE",
+        "damage": 24,
+        "count": 6,
+        "speed": 7,
+        "interval": 7,
+        "sound": "bassdrum"
+      },
+      "taunt": "",
+      "winQuote": ""
     },
     {
       "id": "xylophone",
-      "name": "Xylophone",
-      "placeholder": "Mallet sticks."
+      "enabled": true,
+      "order": 2,
+      "name": "PENNY \"MALLETS\" OKAFOR",
+      "section": "Front Ensemble (Pit)",
+      "instrument": "Xylophone",
+      "stats": {
+        "health": 950,
+        "walk": 2.7,
+        "jump": 12,
+        "power": 0.95
+      },
+      "look": {
+        "jacket": "#17305f",
+        "trim": "#d4a017",
+        "pants": "#0c1734",
+        "skin": "#f1c27d",
+        "hair": "#d1495b",
+        "plume": "#ff595e",
+        "build": "slim"
+      },
+      "special": {
+        "type": "rush",
+        "name": "ARPEGGIO RUN",
+        "damage": 14,
+        "hits": 5,
+        "speed": 6,
+        "frames": 28,
+        "sound": "bells"
+      },
+      "super": {
+        "type": "rain",
+        "name": "CHIME CASCADE",
+        "damage": 24,
+        "count": 8,
+        "interval": 8,
+        "sound": "bells"
+      },
+      "taunt": "",
+      "winQuote": ""
     },
     {
       "id": "flute",
-      "name": "Flute",
-      "placeholder": "Flute used as a bashing weapon."
-    },
-    {
-      "id": "tuba",
-      "name": "Tuba",
-      "placeholder": "Tuba."
+      "enabled": true,
+      "order": 3,
+      "name": "SKYE \"SILVER STICK\" LIN",
+      "section": "Woodwinds",
+      "instrument": "Flute",
+      "stats": {
+        "health": 900,
+        "walk": 3.2,
+        "jump": 13,
+        "power": 0.9
+      },
+      "look": {
+        "jacket": "#17305f",
+        "trim": "#d4a017",
+        "pants": "#0c1734",
+        "skin": "#ffdbac",
+        "hair": "#e9c46a",
+        "plume": "#7ef9ff",
+        "build": "slim"
+      },
+      "special": {
+        "type": "projectile",
+        "name": "PICCOLO PIERCE",
+        "damage": 45,
+        "speed": 10,
+        "kind": "note",
+        "sound": "flute"
+      },
+      "super": {
+        "type": "tornado",
+        "name": "TRILL TORNADO",
+        "damage": 20,
+        "hits": 8,
+        "speed": 3.2,
+        "sound": "flute"
+      },
+      "taunt": "",
+      "winQuote": ""
     },
     {
       "id": "trumpet",
-      "name": "Trumpet",
-      "placeholder": "Trumpet."
+      "enabled": true,
+      "order": 4,
+      "name": "DANTE \"HIGH C\" REYES",
+      "section": "High Brass",
+      "instrument": "Trumpet",
+      "stats": {
+        "health": 1000,
+        "walk": 2.8,
+        "jump": 12,
+        "power": 1.05
+      },
+      "look": {
+        "jacket": "#17305f",
+        "trim": "#d4a017",
+        "pants": "#0c1734",
+        "skin": "#8d5524",
+        "hair": "#111111",
+        "plume": "#ff9f1c",
+        "build": "normal"
+      },
+      "special": {
+        "type": "projectile",
+        "name": "HIGH-NOTE BLAST",
+        "damage": 55,
+        "speed": 8,
+        "kind": "wave",
+        "color": "#ffd23f",
+        "sound": "trumpet"
+      },
+      "super": {
+        "type": "beam",
+        "name": "HIGH-C SCREAM",
+        "damage": 18,
+        "hits": 9,
+        "frames": 48,
+        "push": 5,
+        "sound": "trumpet"
+      },
+      "taunt": "",
+      "winQuote": ""
     },
     {
       "id": "trombone",
-      "name": "Trombone",
-      "placeholder": "Trombone."
+      "enabled": true,
+      "order": 5,
+      "name": "THEO \"SLIDE\" WASHINGTON",
+      "section": "Low Brass",
+      "instrument": "Trombone",
+      "stats": {
+        "health": 1050,
+        "walk": 2.5,
+        "jump": 11,
+        "power": 1.05
+      },
+      "look": {
+        "jacket": "#17305f",
+        "trim": "#d4a017",
+        "pants": "#0c1734",
+        "skin": "#e0ac69",
+        "hair": "#5a3825",
+        "plume": "#e76f51",
+        "build": "normal"
+      },
+      "special": {
+        "type": "poke",
+        "name": "SLIDE JAB",
+        "damage": 65,
+        "reach": 150,
+        "frames": 14,
+        "sound": "trombone"
+      },
+      "super": {
+        "type": "spin",
+        "name": "GLISSANDO EXPRESS",
+        "damage": 24,
+        "hits": 7,
+        "speed": 4.5,
+        "frames": 56,
+        "sound": "trombone"
+      },
+      "taunt": "",
+      "winQuote": ""
+    },
+    {
+      "id": "tuba",
+      "enabled": true,
+      "order": 6,
+      "name": "GUS \"SOUSA-MOUNTAIN\" ROMERO",
+      "section": "Low Brass",
+      "instrument": "Tuba (sousaphone)",
+      "stats": {
+        "health": 1200,
+        "walk": 2.0,
+        "jump": 10,
+        "power": 1.2
+      },
+      "look": {
+        "jacket": "#17305f",
+        "trim": "#d4a017",
+        "pants": "#0c1734",
+        "skin": "#a16e4b",
+        "hair": "#222222",
+        "plume": "#ffffff",
+        "build": "big"
+      },
+      "special": {
+        "type": "grab",
+        "name": "BELL-LOOP SLAM",
+        "damage": 120,
+        "range": 70,
+        "sound": "tuba"
+      },
+      "super": {
+        "type": "avalanche",
+        "name": "BWAAAMP AVALANCHE",
+        "damage": 30,
+        "count": 5,
+        "interval": 10,
+        "sound": "tuba"
+      },
+      "taunt": "",
+      "winQuote": ""
     },
     {
       "id": "clarinet",
-      "name": "Clarinet",
-      "placeholder": "Clarinet."
+      "enabled": true,
+      "order": 7,
+      "name": "MAYA \"SQUEAK\" PATEL",
+      "section": "Woodwinds",
+      "instrument": "Clarinet",
+      "stats": {
+        "health": 950,
+        "walk": 3.0,
+        "jump": 12,
+        "power": 0.95
+      },
+      "look": {
+        "jacket": "#17305f",
+        "trim": "#d4a017",
+        "pants": "#0c1734",
+        "skin": "#c68642",
+        "hair": "#3d2b1f",
+        "plume": "#8ac926",
+        "build": "slim"
+      },
+      "special": {
+        "type": "projectile",
+        "name": "SQUEAK SHRIEK",
+        "damage": 35,
+        "speed": 8,
+        "kind": "squeak",
+        "stun": 40,
+        "sound": "clarinet"
+      },
+      "super": {
+        "type": "rush",
+        "name": "LICORICE STICK FLURRY",
+        "damage": 26,
+        "hits": 7,
+        "speed": 9,
+        "frames": 34,
+        "sound": "clarinet",
+        "super": true
+      },
+      "taunt": "",
+      "winQuote": ""
     },
     {
       "id": "bassclarinet",
-      "name": "Bass Clarinet",
-      "placeholder": "Bass clarinet."
+      "enabled": true,
+      "order": 8,
+      "name": "OZZIE \"THE DEEP END\" LINDQVIST",
+      "section": "Woodwinds",
+      "instrument": "Bass clarinet",
+      "stats": {
+        "health": 1100,
+        "walk": 2.2,
+        "jump": 10.5,
+        "power": 1.15
+      },
+      "look": {
+        "jacket": "#17305f",
+        "trim": "#d4a017",
+        "pants": "#0c1734",
+        "skin": "#8d5524",
+        "hair": "#111111",
+        "plume": "#a78bfa",
+        "build": "tall"
+      },
+      "special": {
+        "type": "projectile",
+        "name": "SUBWOOFER DRONE",
+        "damage": 85,
+        "speed": 2.6,
+        "kind": "drone",
+        "size": 2,
+        "knockdown": true,
+        "sound": "bassclarinet"
+      },
+      "super": {
+        "type": "vacuum",
+        "name": "CHALUMEAU RUMBLE",
+        "damage": 190,
+        "pull": 3.2,
+        "frames": 70,
+        "sound": "bassclarinet"
+      },
+      "taunt": "",
+      "winQuote": ""
     },
     {
       "id": "colorguard",
-      "name": "Color Guard",
-      "placeholder": "Acrobatic female color guard. Flag weapon."
+      "enabled": true,
+      "order": 9,
+      "name": "JADE \"BANNER\" CASTILLO",
+      "section": "Color Guard",
+      "instrument": "Flag (and the occasional rifle toss)",
+      "stats": {
+        "health": 950,
+        "walk": 3.1,
+        "jump": 13,
+        "power": 1.0
+      },
+      "look": {
+        "jacket": "#17305f",
+        "trim": "#d4a017",
+        "pants": "#0c1734",
+        "skin": "#f1c27d",
+        "hair": "#6a040f",
+        "plume": "#ff006e",
+        "build": "slim"
+      },
+      "special": {
+        "type": "boomerang",
+        "name": "FLAG TOSS",
+        "damage": 45,
+        "speed": 6,
+        "kind": "flag",
+        "sound": "snare"
+      },
+      "super": {
+        "type": "spin",
+        "name": "RIFLE TOSS STORM",
+        "damage": 22,
+        "hits": 7,
+        "speed": 3.4,
+        "frames": 52,
+        "sound": "snare"
+      },
+      "build": "slim",
+      "taunt": "",
+      "winQuote": ""
     }
   ]
 }

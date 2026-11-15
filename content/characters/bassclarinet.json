@@ -1,13 +1,16 @@
 {
   "id": "bassclarinet",
-  "name": "Bass Clarinet",
+  "name": "Ozzie \"The Deep End\" Lindqvist",
   "section": "Woodwinds",
   "instrument": "Bass clarinet",
-  "fightingStyle": "",
-  "personality": "",
-  "rivals": [],
-  "whyTheyFight": "",
-  "taunt": "",
-  "winQuote": "",
-  "ending": ""
+  "fightingStyle": "Slow, tricky zoner. Low rumbling notes roll along the ground like waves, and the long instrument's curved bell hooks opponents in close. Hard to approach and unpredictable.",
+  "personality": "Quiet, mysterious and dryly funny. Always seems to know more than he says. Often found reading in a corner of the locker room.",
+  "rivals": [
+    "clarinet",
+    "tuba"
+  ],
+  "whyTheyFight": "Nobody notices the bass clarinet until it's missing. Ozzie fights to show the whole band how much the low notes hold everything up, and to settle a long argument with the clarinets about whose instrument is cooler.",
+  "taunt": "You can't hear me. That's the point.",
+  "winQuote": "Told you. Low notes carry.",
+  "ending": "Ozzie wins Band Wars and arranges a halftime piece built entirely on low woodwinds. On the dark football field the rumble rattles the bleachers, and the band finally gets why he never stops talking about 'the foundation.'"
 }

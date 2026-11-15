@@ -1,13 +1,16 @@
 {
   "id": "flute",
-  "name": "Flute",
+  "name": "Skye \"Silver Stick\" Lin",
   "section": "Woodwinds",
   "instrument": "Flute",
-  "fightingStyle": "",
-  "personality": "",
-  "rivals": [],
-  "whyTheyFight": "",
-  "taunt": "",
-  "winQuote": "",
-  "ending": ""
+  "fightingStyle": "Quick and pokey. Uses the flute as a bashing staff, with fast jabs, sweeping spins and an overhead bonk. Light on her feet and hard to pin down, with high trill whistles that throw off opponents' timing.",
+  "personality": "Cheerful on the outside and fiercely competitive underneath. Polishes her flute between rounds and won't hear a bad word about the woodwinds.",
+  "rivals": [
+    "clarinet",
+    "colorguard"
+  ],
+  "whyTheyFight": "The flutes always get drowned out by the brass. Skye wants to prove that the smallest instrument on the field can stand up to the loudest, and she wants the solo at the final home game.",
+  "taunt": "Small instrument. Big headache.",
+  "winQuote": "Heard me that time, didn't you?",
+  "ending": "Skye plays the solo at the final home game, alone in a single spotlight on the dark field, and the whole stadium goes quiet to hear it. Afterward the brass section buys her fries at the fast food place, and she accepts politely."
 }

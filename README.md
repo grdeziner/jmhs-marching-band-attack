@@ -1,22 +1,22 @@
 # JMHS Marching Band Attack
 
-Working title: **Band Wars**. An in-browser, 8-bit, Street Fighter II-style 1v1 fighting game about a high school marching band. The page is plain HTML5 canvas and vanilla JavaScript (ES modules). There is no framework and no build step.
+Working title: **Band Wars**. A Street Fighter II-style 1v1 fighting game starring the JMHS marching band. Plain HTML5 canvas and ES modules, with a Web Audio chip synth and no dependencies.
 
-The fight engine is not in this repo yet. What runs today is a placeholder: a title screen and a character-select grid filled from [`content/roster.json`](content/roster.json). Module stubs under `src/` are the drop-in points for the engine.
+Arcade mode walks one fighter through the rest of the roster, with continues and that fighter's ending. There is also VS CPU, local 2P, CPU vs CPU, How to Play, and Options (CPU level 1–5, rounds, timer, music, SFX, announcer, hitbox view).
 
 ## Play on GitHub Pages
 
 <https://grdeziner.github.io/jmhs-marching-band-attack/>
 
-Every push to `main` runs [`.github/workflows/pages.yml`](.github/workflows/pages.yml), which uploads the repository root and deploys it with GitHub Pages.
+Every push to `main` runs [`.github/workflows/pages.yml`](.github/workflows/pages.yml), which uploads the repository root and deploys it with GitHub Pages. The single-file build is on that same site at <https://grdeziner.github.io/jmhs-marching-band-attack/dist/index.html> and can be saved and opened from disk.
 
 One-time setup: the owner must set **Settings > Pages > Source** to **GitHub Actions** once. Until that source is selected, the workflow has nowhere to publish.
 
 ## Run locally
 
-ES modules and `content/roster.json` have to be loaded over HTTP. Opening `index.html` as a file will not start the game.
+**Single file:** open `dist/index.html` straight from disk. Code, content, art, and music are inlined.
 
-From the repository root:
+**Dev (multi-file):** ES modules need HTTP, so a `file://` URL will not run the root `index.html`. From the repository root:
 
 ```
 python3 -m http.server 8000
@@ -28,31 +28,59 @@ or:
 npx serve . -p 8000
 ```
 
-Then open <http://localhost:8000>.
+Then open <http://localhost:8000>. `npx serve .` on its own prints the address it picked (port 3000 when that port is free). `npm run serve` uses port 8080.
 
-`npx serve .` on its own also works. It prints the address it picked (port 3000 when that port is free).
+**Rebuild the single file** after any art, content, or music change:
+
+```
+node build.js
+```
+
+That rewrites `dist/index.html` and `content/files.json`. The dev page uses `content/files.json` so it does not request art or songs that are not in the repo yet.
 
 ## Controls
 
-On the title screen, press Enter or Space, or click the canvas. **PRESS START** blinks unless the OS asks for reduced motion.
+| | P1 | P2 |
+| --- | --- | --- |
+| Move / jump / crouch | W A S D | Arrow keys |
+| Punch / Kick / Special | F / G / H | Num1 / Num2 / Num3 (or `,` `.` `/`) |
+| Super (meter full) | R | Num0 (or `'`) |
 
-On the character select screen, move with the arrow keys, WASD, the number keys 1–9, or a click. Esc or Backspace returns to the title. The nine names are read from the roster file, not hard-coded.
+In 1-player modes P1 can also use the arrows plus J / K / L / I. Gamepads work too. Esc pauses.
+
+Hold back to block. Crouch-block stops lows and sweeps. Jump-ins have to be blocked standing. Down+Kick is a sweep. Down+Punch is a low jab. Quarter-circle-forward + Punch also does the special, and Special+Kick does the super.
+
+URL hooks for testing: `?fight=1&p1=drummer&p2=tuba&stage=football&cpu1=1`, `?mute=1`, `?manual=1`, `?speed=4`, `?scene=select`. `window.BAND` is the running game.
 
 ## Layout
 
 ```
-index.html              canvas page
-src/main.js             placeholder title and select
-src/engine/             fight simulation stub
-src/scenes/             scene stub
-src/fighters/           sprite and data loader stub
-src/audio/              audio stub
-src/input/              two-player input stub
-content/roster.json     nine fighter ids and select-screen lines
-content/stages.json     three stages and the stage size contract
-content/characters/     one backstory JSON per fighter
-art/characters/<id>/    sheet.png, sheet.json, portrait.png
-art/stages/<id>/        far.png, mid.png, optional anim_N.png
+index.html                 dev entry (loads src/main.js)
+dist/index.html            single-file build (committed, downloadable)
+src/                       engine: fight, fighter, moves, ai, scenes, audio, input
+content/roster.json        enabled/order, stats, placeholder look, special/super
+content/stages.json        stage names and music files
+content/characters/*.json  backstories
+content/story.md           the same stories, readable
+content/files.json         assets that exist (rewritten by build.js)
+art/characters/<id>/       sheet.png, sheet.json, portrait.png, optional projectile.png
+art/stages/<id>/           far.png, mid.png, anim_0..3.png
+audio/music/<id>.js        stage songs
+build.js                   writes dist/index.html
+tests/                     headless Playwright tests
 ```
 
-Stage art, character art, and character backstories each have a lane. See [CONTRIBUTING.md](CONTRIBUTING.md). The backstory field list is in [content/characters/README.md](content/characters/README.md).
+Stage art, character art, and backstories each have a lane. See [CONTRIBUTING.md](CONTRIBUTING.md). The story schema is in [content/characters/README.md](content/characters/README.md). The sprite contract is in [art/characters/SPEC.md](art/characters/SPEC.md). The football stage README is the worked example for stage layers.
+
+Only the drummer has painted sprites so far. The other eight fighters draw procedural placeholders in the same frame format until `sheet.png` lands. Their folders are kept with `.gitkeep`. `content/characters/boss.json` is a future boss and is not on the select grid.
+
+## Tests
+
+```
+python3 -m http.server 8731
+python3 tests/run_tests.py
+python3 tests/fallback_test.py
+python3 tests/run_tests.py file://$PWD/dist/index.html
+```
+
+`tests/run_tests.py` walks the menus and plays CPU-vs-CPU matches. It needs Playwright and Chrome.

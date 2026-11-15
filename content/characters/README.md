@@ -2,7 +2,9 @@
 
 One JSON file per fighter: `content/characters/<id>.json`. The `id` matches [`content/roster.json`](../roster.json) and the folder `art/characters/<id>/`.
 
-The nine scaffold files are already named. Fill them in. Do not add a second copy of a fighter, and do not put the prose in `roster.json`. The roster only carries the select-screen name and a one-line placeholder. This folder carries the writing.
+The nine roster files are already written. Edit them in place. [`story.md`](../story.md) is the same material as a readable page; keep it in step when you change a story. Do not add a second copy of a fighter. The roster holds stats, the placeholder look, and the special/super numbers. This folder holds the writing, and a non-empty story field overrides the roster on screen.
+
+`boss.json` is Major Discord, a future boss. The game does not load it yet. Leave that id off the roster until the fight exists.
 
 Plain text only. No Markdown. `taunt` and `winQuote` are one line each. `ending` is a short paragraph (one string). `rivals` is an array of other fighter **ids**, not display names.
 

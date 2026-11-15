@@ -1,22 +1,220 @@
 {
-  "image": "sheet.png",
+  "id": "drummer",
+  "name": "Marcus \"Thunder\" Boone",
+  "instrument": "Marching Bass Drum",
   "frameWidth": 96,
   "frameHeight": 112,
-  "sheetWidth": 576,
-  "sheetHeight": 1120,
-  "columns": 6,
+  "anchor": {
+    "x": 48,
+    "y": 111
+  },
   "facing": "right",
-  "anchor": "bottom-center",
-  "animations": [
-    { "name": "idle", "row": 0, "frames": 4 },
-    { "name": "walk", "row": 1, "frames": 6 },
-    { "name": "jump", "row": 2, "frames": 4 },
-    { "name": "crouch", "row": 3, "frames": 2 },
-    { "name": "block", "row": 4, "frames": 2 },
-    { "name": "punch", "row": 5, "frames": 3 },
-    { "name": "kick", "row": 6, "frames": 4 },
-    { "name": "special", "row": 7, "frames": 6 },
-    { "name": "hit", "row": 8, "frames": 2 },
-    { "name": "ko", "row": 9, "frames": 4 }
-  ]
+  "scale": 3,
+  "scaleFilter": "nearest",
+  "background": "transparent",
+  "palette": [
+    "#0A0B10",
+    "#0C1734",
+    "#17305F",
+    "#3A5A9C",
+    "#7A5410",
+    "#D4A017",
+    "#F5DE6A",
+    "#F6F2EA",
+    "#B9B3A6",
+    "#8E4E2C",
+    "#E09A68",
+    "#F5C49A",
+    "#1A1210",
+    "#5A3016",
+    "#A05A28",
+    "#C47A44",
+    "#141418",
+    "#3A3A42",
+    "#EDE6D2",
+    "#C4B99A",
+    "#8F866C",
+    "#8A3040",
+    "#D07058",
+    "#FFF6C8"
+  ],
+  "animations": {
+    "idle": {
+      "row": 0,
+      "frames": 4,
+      "fps": 6,
+      "loop": true,
+      "hurtbox": {
+        "x": 26,
+        "y": 10,
+        "w": 52,
+        "h": 101
+      }
+    },
+    "walk": {
+      "row": 1,
+      "frames": 6,
+      "fps": 10,
+      "loop": true,
+      "hurtbox": {
+        "x": 20,
+        "y": 10,
+        "w": 58,
+        "h": 101
+      }
+    },
+    "jump": {
+      "row": 2,
+      "frames": 4,
+      "fps": 10,
+      "loop": false,
+      "hurtbox": {
+        "x": 24,
+        "y": 8,
+        "w": 54,
+        "h": 96
+      }
+    },
+    "crouch": {
+      "row": 3,
+      "frames": 2,
+      "fps": 8,
+      "loop": true,
+      "hurtbox": {
+        "x": 24,
+        "y": 22,
+        "w": 54,
+        "h": 89
+      }
+    },
+    "block": {
+      "row": 4,
+      "frames": 2,
+      "fps": 8,
+      "loop": true,
+      "hurtbox": {
+        "x": 28,
+        "y": 14,
+        "w": 56,
+        "h": 97
+      },
+      "blockbox": {
+        "x": 48,
+        "y": 40,
+        "w": 32,
+        "h": 40
+      }
+    },
+    "punch": {
+      "row": 5,
+      "frames": 3,
+      "fps": 12,
+      "loop": false,
+      "hurtbox": {
+        "x": 24,
+        "y": 10,
+        "w": 54,
+        "h": 101
+      },
+      "hitbox": {
+        "frames": [
+          1
+        ],
+        "x": 80,
+        "y": 32,
+        "w": 16,
+        "h": 20
+      }
+    },
+    "kick": {
+      "row": 6,
+      "frames": 4,
+      "fps": 12,
+      "loop": false,
+      "hurtbox": {
+        "x": 22,
+        "y": 12,
+        "w": 50,
+        "h": 99
+      },
+      "hitbox": {
+        "frames": [
+          1,
+          2
+        ],
+        "x": 72,
+        "y": 52,
+        "w": 22,
+        "h": 18
+      }
+    },
+    "special": {
+      "row": 7,
+      "frames": 6,
+      "fps": 10,
+      "loop": false,
+      "hurtbox": {
+        "x": 26,
+        "y": 10,
+        "w": 54,
+        "h": 101
+      },
+      "hitbox": {
+        "frames": [
+          3,
+          4
+        ],
+        "x": 54,
+        "y": 28,
+        "w": 34,
+        "h": 40
+      },
+      "spawn_projectile_on": 3
+    },
+    "hit": {
+      "row": 8,
+      "frames": 2,
+      "fps": 10,
+      "loop": false,
+      "hurtbox": {
+        "x": 16,
+        "y": 10,
+        "w": 56,
+        "h": 101
+      }
+    },
+    "ko": {
+      "row": 9,
+      "frames": 4,
+      "fps": 8,
+      "loop": false,
+      "hurtbox": {
+        "x": 8,
+        "y": 40,
+        "w": 80,
+        "h": 71
+      }
+    }
+  },
+  "projectile": {
+    "file": "projectile.png",
+    "frameWidth": 80,
+    "frameHeight": 64,
+    "frames": 6,
+    "fps": 12,
+    "loop": false,
+    "anchor": {
+      "x": 6,
+      "y": 32
+    },
+    "notes": "Expanding sound-shockwave blast. Spawn on special frame index 3 (the mallet slam), origin at the front of the bass drum, travelling right."
+  },
+  "notes": "3/4 view, facing right. Game flips the sprite for the left side. Feet sit on the bottom of the frame; anchor is bottom-center (48, 111). Jump / KO poses stay in the same frame space \u2014 the game moves the entity. Special frame 3 slams the drum and should spawn projectile.png. Palette is navy + gold + white trim. Official fighter name is Marcus \"Thunder\" Boone (see content/characters/drummer.json).",
+  "files": {
+    "sheet": "sheet.png",
+    "portrait": "portrait.png",
+    "projectile": "projectile.png",
+    "preview": "preview.gif",
+    "previewSheet4x": "preview_sheet_4x.png"
+  }
 }

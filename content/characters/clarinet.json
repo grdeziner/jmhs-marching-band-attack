@@ -1,13 +1,16 @@
 {
   "id": "clarinet",
-  "name": "Clarinet",
+  "name": "Maya \"Squeak\" Patel",
   "section": "Woodwinds",
   "instrument": "Clarinet",
-  "fightingStyle": "",
-  "personality": "",
-  "rivals": [],
-  "whyTheyFight": "",
-  "taunt": "",
-  "winQuote": "",
-  "ending": ""
+  "fightingStyle": "Precise counter-fighter. Waits for openings, then punishes with sharp, accurate jabs and a piercing squeak that stuns opponents for a moment. Few wasted moves.",
+  "personality": "Serious, organized and focused, she runs sectionals like a coach. Carries a reed case everywhere. She got the nickname 'Squeak' from her freshman year, and she has turned it into a weapon.",
+  "rivals": [
+    "bassclarinet",
+    "flute"
+  ],
+  "whyTheyFight": "Maya plans to be drum major one day, and winning Band Wars proves she can lead. She also wants everyone to finally stop calling her 'Squeak.'",
+  "taunt": "Every reed is ready. Are you?",
+  "winQuote": "Precision beats volume. Every time.",
+  "ending": "Maya takes the Golden Plume and leads the next locker room pep talk herself. The whole band listens, and she's named section leader on the spot. Everyone still calls her 'Squeak,' but now they say it with respect."
 }
