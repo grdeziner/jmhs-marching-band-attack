@@ -95,18 +95,18 @@ def draw_stick(c: Canvas, hand, tip, head_r=3.0) -> None:
 def draw_glock(c: Canvas, pose: Pose) -> None:
     """A small marching glockenspiel slung at the hip."""
     cx, cy = pose.inst
-    # silver frame
-    c.shade_ellipse(cx, cy, 11, 5.5, SILVER, SILVER_LT, SILVER_DK)
-    # bars (short gold / amber keys, high to low left to right)
-    bars = [
-        (-7, GOLD_LT), (-4, GOLD), (-1, GOLD_DK),
-        (2, GOLD), (5, GOLD_LT), (8, GOLD),
-    ]
-    for dx, col in bars:
-        c.vline(int(cx + dx), int(cy - 3), int(cy + 3), col)
-        c.vline(int(cx + dx + 1), int(cy - 2), int(cy + 2), shade(col, 1.2) if col != GOLD_LT else WHITE)
+    # rectangular glockenspiel frame, slightly tilted
+    c.rect(int(cx - 11), int(cy - 6), 22, 12, SILVER_DK, fill=True)
+    c.rect(int(cx - 10), int(cy - 5), 20, 10, SILVER, fill=True)
+    c.rect(int(cx - 9), int(cy - 4), 18, 8, SILVER_LT, fill=True)
+    # graded bars, taller on the left (typical glock / xylo)
+    for i, dx in enumerate(range(-8, 9, 2)):
+        h = 7 - i // 2
+        col = (GOLD_LT, GOLD, GOLD, GOLD_DK, GOLD, GOLD_LT, GOLD, GOLD_DK, GOLD)[i]
+        c.vline(int(cx + dx), int(cy - h // 2), int(cy + h // 2), col)
+        c.vline(int(cx + dx) + 1, int(cy - h // 2 + 1), int(cy + h // 2 - 1), GOLD_LT if col != GOLD_LT else WHITE)
     # strap up to the left shoulder
-    c.shade_taper(pose.sh_l[0], pose.sh_l[1], cx - 4, cy - 4, 1.4, 1.4, SILVER, SILVER_LT, SILVER_DK)
+    c.shade_taper(pose.sh_l[0], pose.sh_l[1], cx - 6, cy - 5, 1.4, 1.4, SILVER, SILVER_LT, SILVER_DK)
 
 
 def paint_mid(c, pose):
@@ -285,14 +285,14 @@ def pose_special(i):
     elif i == 2:
         # flurry start — sticks crossing in front
         p.expression = "yell"
-        p.hd_l, p.hd_r = (44, 48), (66, 44)
-        p.mal_l, p.mal_r = (62, 32), (48, 28)
+        p.hd_l, p.hd_r = (42, 56), (66, 52)
+        p.mal_l, p.mal_r = (60, 40), (48, 36)
         p.flash = True
     elif i == 3:
         # opposite flurry + notes launch
         p.expression = "yell"
-        p.hd_l, p.hd_r = (40, 44), (70, 48)
-        p.mal_l, p.mal_r = (52, 26), (86, 34)
+        p.hd_l, p.hd_r = (40, 54), (72, 56)
+        p.mal_l, p.mal_r = (52, 38), (88, 42)
         p.flash = True
     elif i == 4:
         p.expression = "yell"

@@ -7,9 +7,15 @@ import { audio } from './audio.js';
 
 const TITLE = ['JMHS', 'MARCHING BAND', 'ATTACK!'];
 function panel(ctx, x, y, w, h, fill = 'rgba(8,12,40,0.85)', edge = '#d4a017') { ctx.fillStyle = '#000'; ctx.fillRect(x - 2, y - 2, w + 4, h + 4); ctx.fillStyle = edge; ctx.fillRect(x - 1, y - 1, w + 2, h + 2); ctx.fillStyle = fill; ctx.fillRect(x, y, w, h); }
+// portraits: the optional 128x128 portrait_large.png is used for anything drawn bigger than 64px, else portrait.png upscaled
 function portrait(ctx, art, x, y, size, flip, dim) {
+  const img = size > 64 && art.portraitLarge ? art.portraitLarge : art.portrait; if (!img) return;
   ctx.save(); ctx.imageSmoothingEnabled = false; ctx.translate(x + (flip ? size : 0), y); ctx.scale(flip ? -1 : 1, 1);
-  ctx.drawImage(art.portrait, 0, 0, size, size); if (dim) { ctx.fillStyle = 'rgba(0,0,0,0.55)'; ctx.fillRect(0, 0, size, size); } ctx.restore(); }
+  ctx.drawImage(img, 0, 0, size, size); if (dim) { ctx.fillStyle = 'rgba(0,0,0,0.55)'; ctx.fillRect(0, 0, size, size); } ctx.restore(); }
+function frame16(ctx, x, y, w, h, glow) { // beveled gold frame (16-bit select style)
+  ctx.fillStyle = '#10081c'; ctx.fillRect(x - 5, y - 5, w + 10, h + 10);
+  const g = ctx.createLinearGradient(0, y - 4, 0, y + h + 4); g.addColorStop(0, '#fff1a8'); g.addColorStop(0.5, glow || '#d4a017'); g.addColorStop(1, '#5a3c06');
+  ctx.fillStyle = g; ctx.fillRect(x - 4, y - 4, w + 8, h + 8); ctx.fillStyle = '#10081c'; ctx.fillRect(x - 1, y - 1, w + 2, h + 2); }
 function sprite(ctx, art, anim, t, x, y, scale = 1, flip = false) {
   const fr = art.anims[anim] || art.anims.idle; const f = fr[Math.floor(t / 9) % fr.length];
   ctx.save(); ctx.translate(Math.round(x), Math.round(y)); ctx.scale(flip ? -scale : scale, scale); ctx.drawImage(f.img, f.sx, f.sy, f.sw, f.sh, -f.ax, -f.ay, f.sw, f.sh); ctx.restore(); }
@@ -62,25 +68,32 @@ export class SelectScene {
     const g = ctx.createLinearGradient(0, 0, 0, VIEW_H); g.addColorStop(0, '#0c1734'); g.addColorStop(1, '#3a0c4a'); ctx.fillStyle = g; ctx.fillRect(0, 0, VIEW_W, VIEW_H);
     for (let y = 0; y < VIEW_H; y += 4) { ctx.fillStyle = 'rgba(255,255,255,0.03)'; ctx.fillRect(0, y, VIEW_W, 1); }
     drawText(ctx, 'PLAYER SELECT', VIEW_W / 2, 10, { scale: 3, align: 'center', gradient: ['#ffffff', '#d4a017'] });
-    // big previews
-    const side = (pi) => { const d = F[this.cur[pi]], a = G.arts[d.id], x = pi ? VIEW_W - 110 : 110; const alt = pi === 1 && this.cur[0] === this.cur[1];
-      const art = alt && a.alt ? { ...a, anims: a.alt.anims } : a;
-      sprite(ctx, art, this.done[pi] ? 'special' : 'idle', this.t, x, 204, 1, pi === 1);
+    // big portraits (SF2 Turbo style): 1P left, 2P/CPU right
+    const side = (pi) => { const d = F[this.cur[pi]], a = G.arts[d.id], alt = pi === 1 && this.cur[0] === this.cur[1] && a.alt;
+      const x = pi ? VIEW_W - 20 - 128 : 20, y = 44, cx = x + 64, done = this.done[pi];
+      frame16(ctx, x, y, 128, 128, done && this.t % 8 < 4 ? '#ffffff' : pi ? '#4a8cff' : '#ff4a3a');
+      const bg = ctx.createLinearGradient(0, y, 0, y + 128); bg.addColorStop(0, pi ? '#16307a' : '#7a1620'); bg.addColorStop(1, '#0a0618'); ctx.fillStyle = bg; ctx.fillRect(x, y, 128, 128);
+      portrait(ctx, alt || a, x, y, 128, pi === 1, false);
+      if (done) { ctx.fillStyle = 'rgba(255,255,255,' + Math.max(0, 0.6 - (this.t % 30) / 30) + ')'; ctx.fillRect(x, y, 128, 128); }
       const lbl = this.mode === 'arcade' && pi === 1 ? null : (pi === 1 && this.mode !== 'versus' ? 'CPU' : pi ? '2P' : '1P');
-      if (!lbl) return;
-      drawText(ctx, d.short, x, 40, { scale: 3, align: 'center', color: pi ? '#7ab8ff' : '#ff6b6b' });
-      drawText(ctx, d.instrument.toUpperCase(), x, 66, { align: 'center', color: '#ffe14d' });
-      drawText(ctx, d.special.name, x, 78, { align: 'center', color: '#ffffff' });
-      drawText(ctx, 'SUPER: ' + d.super.name, x, 88, { align: 'center', color: '#7ef9ff' }); };
-    side(0); if (this.mode !== 'arcade') side(1);
+      if (!lbl) { drawText(ctx, '?', cx, y + 40, { scale: 8, align: 'center', color: '#ffffff' }); return; }
+      drawText(ctx, lbl, pi ? x + 122 : x + 6, y + 6, { scale: 2, align: pi ? 'right' : 'left', color: pi ? '#7ab8ff' : '#ff6b6b' });
+      drawText(ctx, d.short, cx, 180, { scale: 3, align: 'center', gradient: pi ? ['#ffffff', '#7ab8ff', '#2a5ad0'] : ['#ffffff', '#ffb0a0', '#e0302a'], italic: true });
+      drawText(ctx, d.instrument.toUpperCase(), cx, 206, { align: 'center', color: '#ffe14d' });
+      wrapText(d.special.name, 22).slice(0, 2).forEach((l, i) => drawText(ctx, l, cx, 218 + i * 10, { align: 'center', color: '#ffffff' }));
+      wrapText('SUPER: ' + d.super.name, 22).slice(0, 2).forEach((l, i) => drawText(ctx, l, cx, 240 + i * 10, { align: 'center', color: '#7ef9ff' }));
+      sprite(ctx, alt ? { ...a, anims: a.alt.anims } : a, done ? 'special' : 'idle', this.t, cx, 340, 0.75, pi === 1); };
+    side(0); side(1);
     // centre info box
     const d = F[this.cur[this.picking >= 0 && this.done[0] ? 1 : 0]];
-    panel(ctx, 220, 44, 200, 160); drawText(ctx, d.fullName, 320, 52, { align: 'center', color: '#ffe14d' });
+    panel(ctx, 172, 44, 296, 156); drawText(ctx, d.fullName, 320, 52, { align: 'center', color: '#ffe14d', italic: true });
     drawText(ctx, (d.section || '').toUpperCase(), 320, 64, { align: 'center', color: '#9db4ff' });
-    wrapText(d.fightingStyle || '', 32).slice(0, 9).forEach((l, i) => drawText(ctx, l, 228, 80 + i * 10, { color: '#ffffff', outline: null }));
-    if (d.taunt) wrapText('"' + d.taunt + '"', 32).slice(0, 2).forEach((l, i) => drawText(ctx, l, 228, 178 + i * 10, { color: '#ffd23f', outline: null }));
+    wrapText(d.fightingStyle || '', 46).slice(0, 8).forEach((l, i) => drawText(ctx, l, 180, 80 + i * 10, { color: '#ffffff', outline: null, shadow: null }));
+    if (d.taunt) wrapText('"' + d.taunt + '"', 46).slice(0, 2).forEach((l, i) => drawText(ctx, l, 180, 176 + i * 10, { color: '#ffd23f', outline: null, shadow: null }));
     // grid
-    F.forEach((f, i) => { const [x, y] = this.cellPos(i); ctx.fillStyle = '#000'; ctx.fillRect(x - 1, y - 1, 66, 66); portrait(ctx, G.arts[f.id], x, y, 64, false, false); });
+    F.forEach((f, i) => { const [x, y] = this.cellPos(i); ctx.fillStyle = '#10081c'; ctx.fillRect(x - 1, y - 1, 66, 66);
+      const cg = ctx.createLinearGradient(0, y, 0, y + 64); cg.addColorStop(0, '#2a3a8a'); cg.addColorStop(1, '#0a0a2a'); ctx.fillStyle = cg; ctx.fillRect(x, y, 64, 64);
+      portrait(ctx, G.arts[f.id], x, y, 64, false, false); ctx.fillStyle = 'rgba(255,255,255,0.18)'; ctx.fillRect(x, y, 64, 1); });
     const cursor = (pi, col, lbl) => { const [x, y] = this.cellPos(this.cur[pi]); const on = this.done[pi] || this.t % 20 < 14; if (!on) return;
       ctx.strokeStyle = col; ctx.lineWidth = 3; ctx.strokeRect(x - 2.5 + pi, y - 2.5 + pi, 68 - pi * 2, 68 - pi * 2);
       ctx.fillStyle = col; ctx.fillRect(x + (pi ? 44 : 0), y + (pi ? 0 : 52), 20, 12); drawText(ctx, lbl, x + (pi ? 46 : 2), y + (pi ? 3 : 55), { color: '#fff', outline: null }); };
@@ -117,7 +130,7 @@ export class VSScene {
     ctx.fillStyle = '#7a0d12'; ctx.fillRect(0, 0, VIEW_W / 2, VIEW_H); ctx.fillStyle = '#0c2a6b'; ctx.fillRect(VIEW_W / 2, 0, VIEW_W / 2, VIEW_H);
     for (let y = 0; y < VIEW_H; y += 6) { ctx.fillStyle = 'rgba(0,0,0,0.18)'; ctx.fillRect(0, y + (this.t % 6), VIEW_W, 2); }
     const a1 = G.arts[p1.id], a2 = G.arts[p2.id]; const same = p1.id === p2.id;
-    portrait(ctx, a1, -200 + k * 236, 40, 192, false); portrait(ctx, same && a2.alt ? { portrait: a2.alt.portrait } : a2, VIEW_W + 8 - k * 236, 40, 192, true);
+    portrait(ctx, a1, -200 + k * 236, 40, 192, false); portrait(ctx, same && a2.alt ? a2.alt : a2, VIEW_W + 8 - k * 236, 40, 192, true);
     drawText(ctx, 'VS', VIEW_W / 2, 100 + Math.sin(this.t / 6) * 3, { scale: 12, align: 'center', gradient: ['#ffffff', '#ffd23f'], outline: '#000' });
     drawText(ctx, p1.fullName, 132, 240, { scale: 1, align: 'center', color: '#fff' }); drawText(ctx, p2.fullName, VIEW_W - 132, 240, { scale: 1, align: 'center', color: '#fff' });
     drawText(ctx, p1.short, 132, 252, { scale: 3, align: 'center', color: '#ffe14d' }); drawText(ctx, p2.short, VIEW_W - 132, 252, { scale: 3, align: 'center', color: '#ffe14d' });
@@ -151,7 +164,7 @@ export class ResultScene {
     ctx.fillStyle = '#05081e'; ctx.fillRect(0, 0, VIEW_W, VIEW_H);
     if (w < 0) { drawText(ctx, 'DRAW GAME', VIEW_W / 2, 150, { scale: 7, align: 'center', gradient: ['#fff', '#ffb000'] }); return; }
     const W = w === 0 ? p1 : p2, L = w === 0 ? p2 : p1; const wa = G.arts[W.id], la = G.arts[L.id];
-    const walt = w === 1 && p1.id === p2.id && wa.alt ? { portrait: wa.alt.portrait } : wa;
+    const walt = w === 1 && p1.id === p2.id && wa.alt ? wa.alt : wa;
     portrait(ctx, walt, 30, 40, 192, false); portrait(ctx, la, VIEW_W - 30 - 96, 40, 96, true, true);
     drawText(ctx, 'WINNER', 126, 20, { scale: 2, align: 'center', color: '#ffe14d' });
     drawText(ctx, W.fullName, 126, 240, { align: 'center', color: '#fff' });

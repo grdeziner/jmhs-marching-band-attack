@@ -1,10 +1,9 @@
 # Band Wars — Character Sprite Spec
 
-Shared art contract for all nine fighters. Drop files in `art/characters/<id>/`.
-The running game draws each frame at its native **96×112** on the **640×360**
-canvas. The page scales that canvas up with nearest-neighbor filtering.
-`scale: 3` in `sheet.json` is preview metadata; the engine does not multiply
-the sprite by 3. Feet sit on the stage floor at **y=320**.
+Shared art contract for all nine fighters. A separate lead integrates these
+sheets into `/workspace/band-wars/index.html` (HTML5 canvas). Art is authored
+at native pixel resolution and scaled up in the game with nearest-neighbor
+filtering so the pixels stay crisp.
 
 School colors are **navy + gold with white trim** unless a fighter brief says
 otherwise.
@@ -14,17 +13,18 @@ otherwise.
 
 | Property        | Value                                                                 |
 |-----------------|-----------------------------------------------------------------------|
-| Native frame    | **96 × 112 px**                                                       |
-| On-screen size  | Native 96×112 on the 640×360 canvas. The page scales the canvas.     |
+| Native frame    | **128 × 112 px**                                                      |
+| Game scale      | **3×** nearest-neighbor (drawn at 384 × 336)                          |
 | Background      | Fully transparent                                                     |
 | Facing          | **Right**. The game flips the sprite horizontally for the left side.  |
 | Feet / anchor   | Bottom-center of the frame. See `anchor` in each `sheet.json`.        |
-| Default anchor  | `{ "x": 48, "y": 111 }` — last row of the frame is the ground line.   |
+| Default anchor  | `{ "x": 64, "y": 111 }` — last row of the frame is the ground line.   |
+| Edge margin     | Keep ~**2 px** of empty padding on the left, right, and top edges.    |
 | Outline         | Dark 1 px outline around each major form                              |
 | Shading         | Simple 2–3 tone, no antialiasing, no dither                           |
 | Palette size    | About 16–24 colors per fighter, NES/SNES-inspired                     |
 
-Jump, hit and KO frames **stay in the same 96×112 box**. The feet may leave
+Jump, hit and KO frames **stay in the same 128×112 box**. The feet may leave
 the ground line in those poses; the game moves the entity (jump arc, knockback,
 fall). Do not bake a jump-height offset into the sprite that would double up
 with gameplay motion.
@@ -32,6 +32,15 @@ with gameplay motion.
 Authoring previews (the `preview.gif` and `preview_sheet_4x.png` next to each
 fighter) are scaled **4×** nearest-neighbor for review only. They are not used
 in-game.
+
+The generator (`tools/generate.py`) validates every frame and warns (or exits
+under `--strict`) if any opaque pixel touches the left, right, or top edge, or
+sits inside the 2 px margin. The bottom edge is the ground line and is not
+checked. The frame was widened from 96×112 to 128×112 so extended punches,
+kicks, KO poses, the tuba silhouette, and the colorguard flag are not clipped.
+
+Fighters that have not yet been regenerated may still be on the older 96×112
+sheet; `sheet.json` `frameWidth` / `frameHeight` / `anchor` are authoritative.
 
 
 ## Uniform base
@@ -54,7 +63,7 @@ may add a few instrument-specific colors but should stay in the 16–24 range.
 
 ## Roster
 
-Files for each fighter live in `art/characters/<id>/`.
+Files for each fighter live in `/workspace/band-wars/art/characters/<id>/`.
 
 | id             | Planned role                                              |
 |----------------|-----------------------------------------------------------|
@@ -77,19 +86,23 @@ characters/<id>/
   sheet.json             frame map + metadata (see below)
   portrait.png           64 × 64 select-screen bust, native
   projectile.png         optional effect / projectile strip
+  super.png              optional super-move effect strip
   preview.gif            review only: all anims cycling at 4× on a neutral bg
   preview_sheet_4x.png   review only: the whole sheet at 4× nearest-neighbor
 ```
 
 `projectile.png` is omitted only if the fighter has no projectile or spawned
 effect. When it exists, describe it in `sheet.json` under `projectile`.
+`super.png` is optional; when it exists, describe it in `sheet.json` under
+`super` (same shape as `projectile`: frameWidth, frameHeight, frames, fps,
+anchor, notes).
 
 
 ## Animation sheet layout
 
 One **row per animation**, in this exact order. Rows with fewer frames leave
 the unused cells on the right **transparent**. Sheet width is
-`max(frame counts) × 96` (currently 6 × 96 = 576). Sheet height is
+`max(frame counts) × 128` (currently 6 × 128 = 768). Sheet height is
 `10 × 112 = 1120`.
 
 | Row | Name      | Frames | Suggested fps | Loop   | Notes                                      |
@@ -116,9 +129,9 @@ an optional `hitbox` (`frames` is a list of **0-based** indices in that row).
   "id": "drummer",
   "name": "Marcus \"Thunder\" Boone",
   "instrument": "Marching Bass Drum",
-  "frameWidth": 96,
+  "frameWidth": 128,
   "frameHeight": 112,
-  "anchor": { "x": 48, "y": 111 },
+  "anchor": { "x": 64, "y": 111 },
   "facing": "right",
   "scale": 3,
   "scaleFilter": "nearest",
@@ -130,15 +143,15 @@ an optional `hitbox` (`frames` is a list of **0-based** indices in that row).
       "frames": 4,
       "fps": 6,
       "loop": true,
-      "hurtbox": { "x": 26, "y": 10, "w": 52, "h": 101 }
+      "hurtbox": { "x": 42, "y": 10, "w": 52, "h": 101 }
     },
     "punch": {
       "row": 5,
       "frames": 3,
       "fps": 12,
       "loop": false,
-      "hurtbox": { "x": 24, "y": 10, "w": 54, "h": 101 },
-      "hitbox": { "frames": [1], "x": 78, "y": 36, "w": 16, "h": 18 }
+      "hurtbox": { "x": 40, "y": 10, "w": 54, "h": 101 },
+      "hitbox": { "frames": [1], "x": 94, "y": 36, "w": 16, "h": 18 }
     }
   },
   "projectile": {

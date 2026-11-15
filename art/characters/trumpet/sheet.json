@@ -1,0 +1,213 @@
+{
+  "id": "trumpet",
+  "name": "Dante \"High C\" Reyes",
+  "instrument": "Trumpet",
+  "frameWidth": 96,
+  "frameHeight": 112,
+  "anchor": {
+    "x": 48,
+    "y": 111
+  },
+  "facing": "right",
+  "scale": 3,
+  "scaleFilter": "nearest",
+  "background": "transparent",
+  "palette": [
+    "#0A0B10",
+    "#0C1734",
+    "#17305F",
+    "#3A5A9C",
+    "#7A5410",
+    "#D4A017",
+    "#F5DE6A",
+    "#F6F2EA",
+    "#B9B3A6",
+    "#8E4E2C",
+    "#F5C49A",
+    "#1A1210",
+    "#141418",
+    "#3A3A42",
+    "#8A3040",
+    "#FFC576",
+    "#FF9F1C",
+    "#8C570F",
+    "#111111",
+    "#B5743A",
+    "#8D5524",
+    "#5C3414",
+    "#6D421C"
+  ],
+  "animations": {
+    "idle": {
+      "row": 0,
+      "frames": 4,
+      "fps": 6,
+      "loop": true,
+      "hurtbox": {
+        "x": 30,
+        "y": 12,
+        "w": 40,
+        "h": 99
+      }
+    },
+    "walk": {
+      "row": 1,
+      "frames": 6,
+      "fps": 10,
+      "loop": true,
+      "hurtbox": {
+        "x": 30,
+        "y": 12,
+        "w": 40,
+        "h": 99
+      }
+    },
+    "jump": {
+      "row": 2,
+      "frames": 4,
+      "fps": 10,
+      "loop": false,
+      "hurtbox": {
+        "x": 30,
+        "y": 12,
+        "w": 40,
+        "h": 99
+      }
+    },
+    "crouch": {
+      "row": 3,
+      "frames": 2,
+      "fps": 8,
+      "loop": true,
+      "hurtbox": {
+        "x": 28,
+        "y": 28,
+        "w": 42,
+        "h": 83
+      }
+    },
+    "block": {
+      "row": 4,
+      "frames": 2,
+      "fps": 8,
+      "loop": true,
+      "hurtbox": {
+        "x": 30,
+        "y": 12,
+        "w": 40,
+        "h": 99
+      }
+    },
+    "punch": {
+      "row": 5,
+      "frames": 3,
+      "fps": 12,
+      "loop": false,
+      "hurtbox": {
+        "x": 30,
+        "y": 12,
+        "w": 40,
+        "h": 99
+      },
+      "hitbox": {
+        "frames": [
+          1
+        ],
+        "x": 78,
+        "y": 36,
+        "w": 18,
+        "h": 18
+      }
+    },
+    "kick": {
+      "row": 6,
+      "frames": 4,
+      "fps": 12,
+      "loop": false,
+      "hurtbox": {
+        "x": 30,
+        "y": 12,
+        "w": 40,
+        "h": 99
+      },
+      "hitbox": {
+        "frames": [
+          1,
+          2
+        ],
+        "x": 72,
+        "y": 50,
+        "w": 22,
+        "h": 18
+      }
+    },
+    "special": {
+      "row": 7,
+      "frames": 6,
+      "fps": 10,
+      "loop": false,
+      "hurtbox": {
+        "x": 30,
+        "y": 12,
+        "w": 40,
+        "h": 99
+      },
+      "hitbox": {
+        "frames": [
+          2,
+          3
+        ],
+        "x": 80,
+        "y": 32,
+        "w": 16,
+        "h": 18
+      },
+      "spawn_projectile_on": 2
+    },
+    "hit": {
+      "row": 8,
+      "frames": 2,
+      "fps": 10,
+      "loop": false,
+      "hurtbox": {
+        "x": 30,
+        "y": 12,
+        "w": 40,
+        "h": 99
+      }
+    },
+    "ko": {
+      "row": 9,
+      "frames": 4,
+      "fps": 8,
+      "loop": false,
+      "hurtbox": {
+        "x": 8,
+        "y": 40,
+        "w": 80,
+        "h": 71
+      }
+    }
+  },
+  "notes": "Cocky, compact-normal striker. Jabs with a short brass trumpet (bell first). Special is a gold-orange high-note sonic beam. Orange plume. Left hand often on hip.",
+  "projectile": {
+    "file": "projectile.png",
+    "frameWidth": 96,
+    "frameHeight": 32,
+    "frames": 6,
+    "fps": 14,
+    "loop": false,
+    "anchor": {
+      "x": 8,
+      "y": 16
+    },
+    "notes": "Blaring high-note sonic beam. Spawn on special frame index 2, origin at the trumpet bell, travelling right as a gold-orange beam."
+  },
+  "files": {
+    "sheet": "sheet.png",
+    "portrait": "portrait.png",
+    "preview": "preview.gif",
+    "previewSheet4x": "preview_sheet_4x.png",
+    "projectile": "projectile.png"
+  }
+}

@@ -6,13 +6,43 @@ const P = (m, extra = {}) => ({ dmg: m.damage || 50, stun: 18, bstun: 14, push: 
 const sec = (m) => (m.super ? 'super' : 'special');
 
 export const MOVE_TYPES = {
-  projectile: (m) => ({ startup: 14, active: 10, recovery: 16,
-    canStart: (f, F) => !F.projectiles.some(p => p.owner === f && !p.dead && !p.isSuper),
+  // Travelling projectile. With art, spawns at m.spawn {x: px in front of the feet, y: px above the floor}
+  // (the sprite's sheet.json anchor sits on that point) on the sheet's spawn_projectile_on frame.
+  projectile: (m) => ({ startup: 14, active: 12, recovery: 16, artHitbox: m.artHitbox !== false,
+    canStart: (f, F) => !F.projectiles.some(p => p.owner === f && !p.dead && !p.isSuper && !p.harmless),
     onTick(f, F, t, ph, pt) { if (ph === 'active' && pt === 0) {
+      const png = !!f.art.projectile, sp = m.spawn || {};
       const big = m.kind === 'drone' ? 56 : m.kind === 'wave' ? 44 : 34;
-      F.spawnProjectile(f, { kind: m.kind || 'note', x: f.x + f.facing * 46, y: m.kind === 'drone' ? 34 : m.kind === 'wave' ? 46 : 62,
-        vx: (m.speed || 5) * f.facing, w: big, h: m.kind === 'drone' ? 56 : 30, color: m.color, usePng: true,
+      F.spawnProjectile(f, { kind: m.kind || 'note', x: f.x + f.facing * (png ? (sp.x ?? 40) : 46), y: png ? (sp.y ?? 60) : (m.kind === 'drone' ? 34 : m.kind === 'wave' ? 46 : 62),
+        vx: (m.speed || 5) * f.facing, vy: m.rise || 0, w: big, h: m.kind === 'drone' ? 56 : 30, color: m.color, usePng: true, life: m.life || 260,
         props: P(m, { stunExtra: m.stun || 0, knockdown: !!m.knockdown, low: !!m.low }) }); } } }),
+
+  // Command grab + body slam (tuba). Frames 0-1 reach (grab window), 2-3 lift, 4 slam + ground shock, 5 recover.
+  slam: (m) => ({ startup: 5, active: 34, recovery: 22, artHitbox: false,
+    // frames come from sheet.json: slam = spawn_projectile_on, hold = hold_frames (default the two before the slam)
+    frameAt(f, ph, pt, n) { const md = f.meta('special'), s = Math.min(n - 1, md.spawn ?? n - 2);
+      const hold = md.hold && md.hold.length ? md.hold : [Math.max(1, s - 2), Math.max(1, s - 1)], h0 = hold[0], h1 = hold[hold.length - 1];
+      if (ph === 'startup') return 0; if (ph === 'recovery') return n - 1;
+      if (pt < 8) return Math.min(h0 - 1, Math.floor(pt / 8 * h0));
+      if (pt < 24) return f.held || pt < 16 ? h0 + Math.min(h1 - h0, Math.floor((pt - 8) / 16 * (h1 - h0 + 1))) : h1;
+      return s + Math.min(Math.max(0, n - 2 - s), Math.floor((pt - 24) / 10)); },
+    onTick(f, F, t, ph, pt) {
+      const o = F.opponent(f);
+      if (ph === 'active' && pt < 8 && !f.held) { // grab window
+        const reach = f.toWorld(f.meta('special').hitbox || { x: 6, y: -80, w: 40, h: 70 }), hb = o.hurtbox(), r = m.range || 70;
+        const near = Math.abs(o.x - f.x) < r || (reach.l < hb.l + hb.w + 6 && reach.l + reach.w > hb.l - 6);
+        if (near && o.y === 0 && o.throwable()) { f.held = o; o.setState('held'); o.vx = 0; F.sfx('block'); }
+        if (pt === 7 && !f.held) f.mvT = f.mv.startup + f.mv.active; // whiff -> recovery
+      }
+      if (f.held && ph === 'active' && pt < 24) { // carried overhead on the tuba's hold frames (hold_point from sheet.json if given)
+        const hp = f.meta('special').holdPoint || { x: 4, y: -104 }, k = Math.min(1, Math.max(0, (pt - 8) / 8));
+        o.x = f.x + f.facing * (30 + (hp.x - 30) * k); o.y = 10 + (-hp.y - 34 - 10) * k; o.vy = 0; o.facing = -f.facing; }
+      if (ph === 'active' && pt === 24) { F.shake(12); if (F.dust) F.dust(f.x + f.facing * 40, 14, 0, true);
+        F.spawnProjectile(f, { kind: 'quake', x: f.x + f.facing * (m.spawn?.x ?? 22), y: m.spawn?.y ?? 0, vx: 0, w: 96, h: 24, usePng: true, life: 30, harmless: !!f.held,
+          props: P(m, { dmg: 25, low: true, push: 4, sound: 'hit' }) });
+        if (f.held) { const held = f.held; f.held = null; held.y = 0; held.state = 'idle';
+          F.hitDirect(f, held, P(m, { unblockable: true, knockdown: true, push: 6, sound: 'heavy' })); held.vy = 5; } }
+      if (ph === 'recovery' && f.held) { f.held.setState('idle'); f.held = null; } } }),
 
   rush: (m) => ({ startup: 8, active: m.frames || 26, recovery: 16, onTick(f, F, t, ph, pt) {
     if (ph === 'active') { f.vx = (m.speed || 7) * f.facing; f.spin = !!m.super;
@@ -42,18 +72,18 @@ export const MOVE_TYPES = {
       vx: (m.speed || 6) * f.facing, w: 40, h: 26, returnAt: 42, usePng: true, props: P(m, { sound: 'hit' }) }); } }),
 
   // ---------------- supers ----------------
-  barrage: (m) => ({ startup: 10, active: (m.count || 6) * (m.interval || 7), recovery: 14, onTick(f, F, t, ph, pt) {
-    if (ph === 'active' && pt % (m.interval || 7) === 0) F.spawnProjectile(f, { kind: 'wave', x: f.x + f.facing * 46, y: 40 + ((pt / (m.interval || 7)) % 2) * 34,
-      vx: (m.speed || 8) * f.facing, w: 44, h: 30, color: '#f5de6a', usePng: true, isSuper: true, props: P(m, { stun: 16, push: 2, chip: 0.2, sound: 'hit', knockdown: pt >= ((m.count || 6) - 1) * (m.interval || 7) }) }); } }),
+  barrage: (m) => ({ spawnsProjectiles: true, startup: 10, active: (m.count || 6) * (m.interval || 7), recovery: 14, onTick(f, F, t, ph, pt) {
+    if (ph === 'active' && pt % (m.interval || 7) === 0) F.spawnProjectile(f, { kind: 'wave', x: f.x + f.facing * (m.spawn?.x ?? 46), y: (f.art.super ? (m.spawn?.y ?? (f.art.super.ay >= f.art.super.h * 0.75 ? 0 : 51)) : 40 + ((pt / (m.interval || 7)) % 2) * 34),
+      vx: (m.speed || 8) * f.facing, w: 44, h: 30, color: '#f5de6a', usePng: f.art.super ? 'super' : true, isSuper: true, props: P(m, { stun: 16, push: 2, chip: 0.2, sound: 'hit', knockdown: pt >= ((m.count || 6) - 1) * (m.interval || 7) }) }); } }),
 
-  rain: (m) => ({ startup: 10, active: (m.count || 8) * (m.interval || 8), recovery: 12, onTick(f, F, t, ph, pt) {
+  rain: (m) => ({ spawnsProjectiles: true, startup: 10, active: (m.count || 8) * (m.interval || 8), recovery: 12, onTick(f, F, t, ph, pt) {
     const cols = ['#ff595e', '#ff924c', '#ffca3a', '#8ac926', '#1982c4', '#6a4c93'];
     if (ph === 'active' && pt % (m.interval || 8) === 0) { const o = F.opponent(f);
-      F.spawnProjectile(f, { kind: 'chime', x: o.x + (F.rand() * 60 - 30), y: 300, vx: 0, vy: -7, w: 30, h: 16, color: cols[(pt / 8 | 0) % cols.length], isSuper: true, falls: true,
+      F.spawnProjectile(f, { usePng: f.art.super ? 'super' : false, kind: 'chime', x: o.x + (F.rand() * 60 - 30), y: 300, vx: 0, vy: -7, w: 30, h: 16, color: cols[(pt / 8 | 0) % cols.length], isSuper: true, falls: true,
         props: P(m, { stun: 16, push: 1, chip: 0.2, sound: 'hit', overhead: true }) }); } } }),
 
-  tornado: (m) => ({ startup: 12, active: 16, recovery: 18, onTick(f, F, t, ph, pt) {
-    if (ph === 'active' && pt === 0) F.spawnProjectile(f, { kind: 'tornado', x: f.x + f.facing * 50, y: 60, vx: (m.speed || 3) * f.facing, w: 56, h: 120,
+  tornado: (m) => ({ spawnsProjectiles: true, startup: 12, active: 16, recovery: 18, onTick(f, F, t, ph, pt) {
+    if (ph === 'active' && pt === 0) F.spawnProjectile(f, { usePng: f.art.super ? 'super' : false, kind: 'tornado', x: f.x + f.facing * 50, y: 60, vx: (m.speed || 3) * f.facing, w: 56, h: 120,
       hits: m.hits || 8, interval: 7, isSuper: true, life: 220, props: P(m, { stun: 14, push: 0.5, chip: 0.15, sound: 'hit' }), last: { knockdown: true, push: 5 } }); } }),
 
   beam: (m) => ({ startup: 12, active: m.frames || 48, recovery: 20, onTick(f, F, t, ph, pt) {
@@ -70,7 +100,7 @@ export const MOVE_TYPES = {
         hits: m.hits || 7, interval: Math.floor((m.frames || 56) / (m.hits || 7)), last: { knockdown: true, push: 7 } }; }
     if (ph === 'recovery' && pt === 0) { f.activeHit = null; f.spin = false; f.vx = 0; } } }),
 
-  avalanche: (m) => ({ startup: 14, active: (m.count || 5) * (m.interval || 10), recovery: 18, onTick(f, F, t, ph, pt) {
+  avalanche: (m) => ({ spawnsProjectiles: true, startup: 14, active: (m.count || 5) * (m.interval || 10), recovery: 18, onTick(f, F, t, ph, pt) {
     if (ph === 'active' && pt % (m.interval || 10) === 0) { F.shake(8); const last = pt >= ((m.count || 5) - 1) * (m.interval || 10);
       for (const d of [1, -1]) F.spawnProjectile(f, { kind: 'quake', x: f.x + d * 40, y: 12, vx: d * 6, w: 52, h: 24, isSuper: true,
         props: P(m, { stun: 16, low: true, push: 2, chip: 0.2, sound: 'hit', knockdown: last }) }); } } }),
@@ -85,7 +115,8 @@ export const MOVE_TYPES = {
 };
 
 export function makeMove(m, isSuper) {
+  if (m.type === 'grab') m = { ...m, type: 'slam' };
   const mk = MOVE_TYPES[m.type] || MOVE_TYPES.projectile;
   const mv = mk({ ...m, super: m.super || isSuper });
-  mv.anim = 'special'; mv.name = m.name; mv.isSuper = isSuper; mv.sound = m.sound; return mv;
+  mv.spawnsProjectiles = !!mv.spawnsProjectiles; mv.anim = 'special'; mv.name = m.name; mv.isSuper = isSuper; mv.sound = m.sound; return mv;
 }

@@ -22,7 +22,7 @@ class Game {
   saveSettings() { try { localStorage.setItem('jmhs-settings', JSON.stringify(this.settings)); } catch {} }
   async load() {
     this.drawLoading('LOADING...');
-    this.content = await loadContent();
+    this.content = await loadContent(); if (this.content.instruments) audio.setCatalog(this.content.instruments);
     const s = this.content.settings || {}; for (const k of ['cpuDifficulty', 'roundsToWin', 'roundTime']) if (s[k] !== undefined && !(k in (JSON.parse(localStorage.getItem('jmhs-settings') || '{}')))) this.settings[k] = s[k];
     this.arts = {}; this.stageArts = {};
     await Promise.all(this.content.fighters.map(async d => { this.arts[d.id] = await loadFighterArt(d); }));

@@ -1,0 +1,223 @@
+{
+  "id": "tuba",
+  "name": "Gus \"Sousa-Mountain\" Romero",
+  "instrument": "Tuba (sousaphone)",
+  "frameWidth": 96,
+  "frameHeight": 112,
+  "anchor": {
+    "x": 48,
+    "y": 111
+  },
+  "facing": "right",
+  "scale": 3,
+  "scaleFilter": "nearest",
+  "background": "transparent",
+  "palette": [
+    "#0A0B10",
+    "#0C1734",
+    "#17305F",
+    "#3A5A9C",
+    "#7A5410",
+    "#D4A017",
+    "#F5DE6A",
+    "#F6F2EA",
+    "#B9B3A6",
+    "#8E4E2C",
+    "#F5C49A",
+    "#1A1210",
+    "#141418",
+    "#3A3A42",
+    "#8A3040",
+    "#FFF6C8",
+    "#FFFFFF",
+    "#8C8C8C",
+    "#222222",
+    "#C4926A",
+    "#A16E4B",
+    "#6E442C",
+    "#7D553A",
+    "#362507",
+    "#432E08",
+    "#6B6C6F"
+  ],
+  "animations": {
+    "idle": {
+      "row": 0,
+      "frames": 4,
+      "fps": 6,
+      "loop": true,
+      "hurtbox": {
+        "x": 12,
+        "y": 12,
+        "w": 78,
+        "h": 99
+      }
+    },
+    "walk": {
+      "row": 1,
+      "frames": 6,
+      "fps": 10,
+      "loop": true,
+      "hurtbox": {
+        "x": 12,
+        "y": 12,
+        "w": 78,
+        "h": 99
+      }
+    },
+    "jump": {
+      "row": 2,
+      "frames": 4,
+      "fps": 10,
+      "loop": false,
+      "hurtbox": {
+        "x": 12,
+        "y": 12,
+        "w": 78,
+        "h": 99
+      }
+    },
+    "crouch": {
+      "row": 3,
+      "frames": 2,
+      "fps": 8,
+      "loop": true,
+      "hurtbox": {
+        "x": 12,
+        "y": 26,
+        "w": 78,
+        "h": 85
+      }
+    },
+    "block": {
+      "row": 4,
+      "frames": 2,
+      "fps": 8,
+      "loop": true,
+      "hurtbox": {
+        "x": 12,
+        "y": 12,
+        "w": 78,
+        "h": 99
+      },
+      "blockbox": {
+        "x": 60,
+        "y": 36,
+        "w": 30,
+        "h": 36
+      }
+    },
+    "punch": {
+      "row": 5,
+      "frames": 3,
+      "fps": 12,
+      "loop": false,
+      "hurtbox": {
+        "x": 12,
+        "y": 12,
+        "w": 78,
+        "h": 99
+      },
+      "hitbox": {
+        "frames": [
+          1
+        ],
+        "x": 78,
+        "y": 40,
+        "w": 16,
+        "h": 22
+      }
+    },
+    "kick": {
+      "row": 6,
+      "frames": 4,
+      "fps": 12,
+      "loop": false,
+      "hurtbox": {
+        "x": 12,
+        "y": 12,
+        "w": 78,
+        "h": 99
+      },
+      "hitbox": {
+        "frames": [
+          1,
+          2
+        ],
+        "x": 72,
+        "y": 52,
+        "w": 22,
+        "h": 20
+      }
+    },
+    "special": {
+      "row": 7,
+      "frames": 6,
+      "fps": 10,
+      "loop": false,
+      "hurtbox": {
+        "x": 12,
+        "y": 12,
+        "w": 78,
+        "h": 99
+      },
+      "hitbox": {
+        "frames": [
+          0,
+          1,
+          4
+        ],
+        "x": 54,
+        "y": 30,
+        "w": 36,
+        "h": 70
+      },
+      "spawn_projectile_on": 4
+    },
+    "hit": {
+      "row": 8,
+      "frames": 2,
+      "fps": 10,
+      "loop": false,
+      "hurtbox": {
+        "x": 12,
+        "y": 12,
+        "w": 78,
+        "h": 99
+      }
+    },
+    "ko": {
+      "row": 9,
+      "frames": 4,
+      "fps": 8,
+      "loop": false,
+      "hurtbox": {
+        "x": 6,
+        "y": 42,
+        "w": 86,
+        "h": 69
+      }
+    }
+  },
+  "notes": "Widest silhouette in the roster: a sousaphone bell on the right and tubing looping over the left shoulder. Special is a command-grab / body slam; the projectile is the landing shock, not a traveling fireball.",
+  "projectile": {
+    "file": "projectile.png",
+    "frameWidth": 96,
+    "frameHeight": 48,
+    "frames": 6,
+    "fps": 12,
+    "loop": false,
+    "anchor": {
+      "x": 48,
+      "y": 40
+    },
+    "notes": "Low-brass BWAAMP ground shock on the body-slam landing. Spawn on special frame index 4, origin at the feet, expanding outward."
+  },
+  "files": {
+    "sheet": "sheet.png",
+    "portrait": "portrait.png",
+    "preview": "preview.gif",
+    "previewSheet4x": "preview_sheet_4x.png",
+    "projectile": "projectile.png"
+  }
+}

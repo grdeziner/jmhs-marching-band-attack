@@ -1,0 +1,213 @@
+{
+  "id": "trombone",
+  "name": "Theo \"Slide\" Washington",
+  "instrument": "Trombone",
+  "frameWidth": 96,
+  "frameHeight": 112,
+  "anchor": {
+    "x": 48,
+    "y": 111
+  },
+  "facing": "right",
+  "scale": 3,
+  "scaleFilter": "nearest",
+  "background": "transparent",
+  "palette": [
+    "#0A0B10",
+    "#0C1734",
+    "#17305F",
+    "#3A5A9C",
+    "#7A5410",
+    "#D4A017",
+    "#F5DE6A",
+    "#F6F2EA",
+    "#B9B3A6",
+    "#8E4E2C",
+    "#F5C49A",
+    "#1A1210",
+    "#141418",
+    "#3A3A42",
+    "#8A3040",
+    "#F0A896",
+    "#E76F51",
+    "#7F3D2C",
+    "#5A3825",
+    "#F0C98A",
+    "#E0AC69",
+    "#B07A3C",
+    "#AE8651"
+  ],
+  "animations": {
+    "idle": {
+      "row": 0,
+      "frames": 4,
+      "fps": 6,
+      "loop": true,
+      "hurtbox": {
+        "x": 28,
+        "y": 10,
+        "w": 44,
+        "h": 101
+      }
+    },
+    "walk": {
+      "row": 1,
+      "frames": 6,
+      "fps": 10,
+      "loop": true,
+      "hurtbox": {
+        "x": 28,
+        "y": 10,
+        "w": 44,
+        "h": 101
+      }
+    },
+    "jump": {
+      "row": 2,
+      "frames": 4,
+      "fps": 10,
+      "loop": false,
+      "hurtbox": {
+        "x": 28,
+        "y": 10,
+        "w": 44,
+        "h": 101
+      }
+    },
+    "crouch": {
+      "row": 3,
+      "frames": 2,
+      "fps": 8,
+      "loop": true,
+      "hurtbox": {
+        "x": 26,
+        "y": 28,
+        "w": 46,
+        "h": 83
+      }
+    },
+    "block": {
+      "row": 4,
+      "frames": 2,
+      "fps": 8,
+      "loop": true,
+      "hurtbox": {
+        "x": 28,
+        "y": 10,
+        "w": 44,
+        "h": 101
+      }
+    },
+    "punch": {
+      "row": 5,
+      "frames": 3,
+      "fps": 12,
+      "loop": false,
+      "hurtbox": {
+        "x": 28,
+        "y": 10,
+        "w": 44,
+        "h": 101
+      },
+      "hitbox": {
+        "frames": [
+          1
+        ],
+        "x": 70,
+        "y": 46,
+        "w": 26,
+        "h": 16
+      }
+    },
+    "kick": {
+      "row": 6,
+      "frames": 4,
+      "fps": 12,
+      "loop": false,
+      "hurtbox": {
+        "x": 28,
+        "y": 10,
+        "w": 44,
+        "h": 101
+      },
+      "hitbox": {
+        "frames": [
+          1,
+          2
+        ],
+        "x": 70,
+        "y": 42,
+        "w": 26,
+        "h": 22
+      }
+    },
+    "special": {
+      "row": 7,
+      "frames": 6,
+      "fps": 10,
+      "loop": false,
+      "hurtbox": {
+        "x": 28,
+        "y": 10,
+        "w": 44,
+        "h": 101
+      },
+      "hitbox": {
+        "frames": [
+          2,
+          3
+        ],
+        "x": 70,
+        "y": 44,
+        "w": 26,
+        "h": 18
+      },
+      "spawn_projectile_on": 3
+    },
+    "hit": {
+      "row": 8,
+      "frames": 2,
+      "fps": 10,
+      "loop": false,
+      "hurtbox": {
+        "x": 28,
+        "y": 10,
+        "w": 44,
+        "h": 101
+      }
+    },
+    "ko": {
+      "row": 9,
+      "frames": 4,
+      "fps": 8,
+      "loop": false,
+      "hurtbox": {
+        "x": 8,
+        "y": 40,
+        "w": 80,
+        "h": 71
+      }
+    }
+  },
+  "notes": "Rangy mid-weight fighter. Punches and kicks are slide-extension pokes; the special is a full slide-thrust plus a low brassy blast. Terra-cotta plume.",
+  "projectile": {
+    "file": "projectile.png",
+    "frameWidth": 96,
+    "frameHeight": 40,
+    "frames": 6,
+    "fps": 12,
+    "loop": false,
+    "anchor": {
+      "x": 8,
+      "y": 28
+    },
+    "notes": "Low brassy blast that rides with the slide thrust. Spawn on special frame index 3, origin at the extended slide bumper, travelling right as a short, wide gold woof."
+  },
+  "files": {
+    "sheet": "sheet.png",
+    "portrait": "portrait.png",
+    "preview": "preview.gif",
+    "previewSheet4x": "preview_sheet_4x.png",
+    "projectile": "projectile.png"
+  }
+}

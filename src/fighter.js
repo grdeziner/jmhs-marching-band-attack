@@ -5,14 +5,19 @@ import { flashOf } from './assets.js';
 const GRAV = 0.62;
 // Normal attacks. Boxes are anchor-relative (feet = 0,0), facing right, y up is negative.
 const NORMALS = {
-  punch:  { anim: 'punch', startup: 4, active: 4, recovery: 9,  dmg: 45, stun: 15, bstun: 10, push: 3, box: { x: 14, y: -80, w: 46, h: 22 }, af: [1] },
-  kick:   { anim: 'kick',  startup: 7, active: 5, recovery: 14, dmg: 65, stun: 18, bstun: 12, push: 4, box: { x: 16, y: -64, w: 54, h: 22 }, af: [2], sound: 'heavy' },
-  cpunch: { anim: 'punch', crouch: 1, startup: 4, active: 4, recovery: 9, dmg: 35, stun: 13, bstun: 9, push: 3, low: 1, box: { x: 12, y: -54, w: 46, h: 20 }, af: [1] },
-  sweep:  { anim: 'kick',  crouch: 1, startup: 8, active: 5, recovery: 20, dmg: 60, stun: 18, bstun: 12, push: 3, low: 1, knockdown: 1, box: { x: 14, y: -26, w: 62, h: 24 }, af: [2], sound: 'heavy' },
-  jpunch: { anim: 'punch', air: 1, startup: 3, active: 9, recovery: 4, dmg: 50, stun: 16, bstun: 10, push: 2, overhead: 1, box: { x: 8, y: -74, w: 46, h: 32 }, af: [1] },
-  jkick:  { anim: 'kick',  air: 1, startup: 5, active: 10, recovery: 4, dmg: 70, stun: 18, bstun: 12, push: 3, overhead: 1, box: { x: 8, y: -52, w: 54, h: 32 }, af: [2], sound: 'heavy' },
+  punch:  { anim: 'punch', startup: 4, active: 4, recovery: 9,  dmg: 56, stun: 15, bstun: 10, push: 3, box: { x: 14, y: -80, w: 46, h: 22 }, af: [1] },
+  kick:   { anim: 'kick',  startup: 7, active: 5, recovery: 14, dmg: 81, stun: 18, bstun: 12, push: 4, box: { x: 16, y: -64, w: 54, h: 22 }, af: [2], sound: 'heavy' },
+  cpunch: { anim: 'punch', crouch: 1, startup: 4, active: 4, recovery: 9, dmg: 44, stun: 13, bstun: 9, push: 3, low: 1, box: { x: 12, y: -54, w: 46, h: 20 }, af: [1] },
+  sweep:  { anim: 'kick',  crouch: 1, startup: 8, active: 5, recovery: 20, dmg: 75, stun: 18, bstun: 12, push: 3, low: 1, knockdown: 1, box: { x: 14, y: -26, w: 62, h: 24 }, af: [2], sound: 'heavy' },
+  jpunch: { anim: 'punch', air: 1, startup: 3, active: 9, recovery: 4, dmg: 62, stun: 16, bstun: 10, push: 2, overhead: 1, box: { x: 8, y: -74, w: 46, h: 32 }, af: [1] },
+  jkick:  { anim: 'kick',  air: 1, startup: 5, active: 10, recovery: 4, dmg: 88, stun: 18, bstun: 12, push: 3, overhead: 1, box: { x: 8, y: -52, w: 54, h: 32 }, af: [2], sound: 'heavy' },
 };
 const CROUCH_SQUASH = 0.72;
+// draw one frame of an effect strip (projectile.png / super.png) on its anchor
+export function drawStrip(ctx, a, x, y, dir, age) {
+  const i = a.loop ? Math.floor(age * a.fps / 60) % a.n : Math.min(a.n - 1, Math.floor(age * a.fps / 60));
+  ctx.save(); ctx.translate(Math.round(x), Math.round(y)); ctx.scale(dir, 1); ctx.drawImage(a.img, i * a.w, 0, a.w, a.h, -a.ax, -a.ay, a.w, a.h); ctx.restore();
+}
 const NEUTRAL = { idle: 1, walk: 1, crouch: 1 };
 
 export class Fighter {
@@ -29,7 +34,7 @@ export class Fighter {
       spin: false, callout: null, perfect: true, landLag: 0 });
   }
   get grounded() { return this.y <= 0 && this.vy <= 0; }
-  throwable() { return !this.invuln && !['down', 'ko', 'getup', 'jump'].includes(this.state) && this.y === 0; }
+  throwable() { return !this.invuln && !['down', 'ko', 'getup', 'jump', 'held'].includes(this.state) && this.y === 0; }
   meta(anim) { return (this.art.meta && this.art.meta[anim]) || {}; }
   hurtbox() {
     const anim = this.state === 'crouch' || (this.state === 'block' && this.crouching) ? 'crouch' : this.anim();
@@ -44,7 +49,7 @@ export class Fighter {
     switch (this.state) {
       case 'walk': return 'walk'; case 'crouch': return 'crouch'; case 'jump': return 'jump'; case 'block': return this.crouching ? 'crouch' : 'block';
       case 'attack': return this.act.anim; case 'move': return 'special'; case 'hit': return 'hit';
-      case 'down': case 'ko': case 'getup': return 'ko'; case 'win': return 'special'; default: return 'idle';
+      case 'down': case 'ko': case 'getup': case 'held': return 'ko'; case 'win': return 'special'; default: return 'idle';
     }
   }
   // ---------- per-frame ----------
@@ -79,6 +84,7 @@ export class Fighter {
     }
     if (this.act && (this.state === 'attack' || this.state === 'jump')) this.tickAttack(F);
     if (this.state === 'move') this.tickMove(F);
+    if (this.state === 'held') { this.blocking = false; return; }
     if (this.state === 'hit') { if (--this.stun <= 0) this.setState('idle'); }
     if (this.state === 'down' || this.state === 'ko') { if (this.grounded && this.y <= 0 && this.downT++ > (this.state === 'ko' ? 1e9 : 34)) { this.setState('getup'); } }
     if (this.state === 'getup') { this.invuln = 12; if (this.t > 18) { this.setState('idle'); this.invuln = 10; } }
@@ -86,11 +92,11 @@ export class Fighter {
     this.x += this.vx;
     if (this.y > 0 || this.vy > 0) { this.y += this.vy; this.vy -= GRAV;
       if (this.y <= 0) { this.y = 0; this.vy = 0; F.sfx('land');
+        if (F.dust) F.dust(this.x, this.state === 'jump' ? 4 : 8, 0, this.state !== 'jump');
         if (this.state === 'jump') { this.act = null; this.activeHit = null; this.setState('idle'); this.landLag = 3; this.vx = 0; }
         if (this.state === 'down' || this.state === 'ko') { this.vx *= 0.3; F.shake(3); } } }
     else if (!['walk', 'move'].includes(this.state)) this.vx *= 0.78;
     if (this.state === 'move' && !this.spin && !this.act?.keepVx) this.vx *= 0.85;
-    if (this.dispHp > this.hp) this.dispHp = Math.max(this.hp, this.dispHp - 6);
   }
   setState(s) { if (this.state !== s) { this.state = s; this.t = 0; if (s !== 'jump') { if (s !== 'attack') this.act = null; } if (s !== 'move' && s !== 'attack' && s !== 'jump') { this.activeHit = null; this.spin = false; } } }
   prepAct() { // use art hitbox if the sheet provides one
@@ -106,15 +112,31 @@ export class Fighter {
     if (t >= a.startup + a.active + a.recovery) { this.act = null; this.activeHit = null; if (this.state === 'attack') this.setState(this.crouching ? 'crouch' : 'idle'); }
   }
   startMove(F, mv) {
-    this.setState('move'); this.mv = mv; this.mvT = 0; this.vx = 0; this.hitCount = 0; this.lastHitT = -99; this.activeHit = null;
+    this.setState('move'); this.mv = mv; this.mvT = 0; this.artHit = false; this.held = null; this.vx = 0; this.hitCount = 0; this.lastHitT = -99; this.activeHit = null;
     this.callout = { text: mv.name, t: 70, big: mv.isSuper };
     if (mv.isSuper) { this.meter = 0; F.superFreeze(this, mv); } else this.meter = Math.min(SUPER_MAX, this.meter + 3);
     F.sfx(mv.sound || 'special'); if (mv.onStart) mv.onStart(this, F);
   }
   movePhase() { const m = this.mv, t = this.mvT; if (t < m.startup) return ['startup', t]; if (t < m.startup + m.active) return ['active', t - m.startup]; return ['recovery', t - m.startup - m.active]; }
+  moveFrameIndex() {
+    const m = this.mv, n = (this.art.anims.special || this.art.anims.idle).length, [ph, pt] = this.movePhase();
+    if (m.frameAt) return Math.max(0, Math.min(n - 1, m.frameAt(this, ph, pt, n)));
+    const sp = Math.min(n - 2, this.meta('special').spawn ?? 3);
+    if (ph === 'startup') return Math.min(sp - 1, Math.floor(pt / Math.max(1, m.startup) * sp));
+    if (ph === 'active') { if (this.spin) { const lo = Math.max(0, sp - 1), hi = Math.max(lo, n - 2); return lo + (Math.floor(pt / 4) % (hi - lo + 1)); }
+      return sp + Math.min(n - 2 - sp, Math.floor(pt / Math.max(1, m.active) * (n - 1 - sp))); }
+    return n - 1;
+  }
   tickMove(F) {
     const m = this.mv; const [ph, pt] = this.movePhase();
     if (m.onTick) m.onTick(this, F, this.mvT, ph, pt);
+    // the sheet's special hitbox (e.g. mallet flurry, slide thrust, flag flourish) is live on its listed frames
+    const hb = this.meta('special').hitbox;
+    if (m.artHitbox && !m.isSuper && hb && this.state === 'move' && this.mv === m) {
+      const on = (hb.frames || []).includes(this.moveFrameIndex());
+      if (on && !this.artHit) { this.artHit = true; this.hitCount = 0; this.activeHit = { box: { x: hb.x, y: hb.y, w: hb.w, h: hb.h }, props: { dmg: Math.round((m.meleeDamage || 30)), stun: 16, bstun: 12, push: 3, special: true, chip: 0.2, sound: 'hit' }, hits: 1 }; }
+      if (!on && this.artHit && this.activeHit && this.activeHit.box.w === hb.w) this.activeHit = null;
+    }
     if (ph === 'active' && m.sound && pt % 24 === 12) F.sfx(m.sound);
     this.mvT++;
     if (this.mvT >= m.startup + m.active + m.recovery) { this.activeHit = null; this.spin = false; this.setState('idle'); }
@@ -129,6 +151,7 @@ export class Fighter {
     this.hp = Math.max(0, this.hp - dmg); this.perfect = false; this.flash = 3;
     this.meter = Math.min(SUPER_MAX, this.meter + dmg * 0.06);
     if (!p.isSuperDmg) att.meter = Math.min(SUPER_MAX, att.meter + dmg * 0.1);
+    if (this.held) { this.held.setState('idle'); this.held.y = 0; this.held = null; }
     this.act = null; this.activeHit = null; this.mv = null;
     if (this.hp <= 0) { this.setState('ko'); this.downT = 0; this.vy = 7; this.y = Math.max(this.y, 0.1); this.vx = dir * 4; return dmg; }
     if (p.knockdown || this.y > 0) { this.setState('down'); this.downT = 0; this.vy = Math.max(this.vy, p.knockdown ? 6.5 : 4); this.y = Math.max(this.y, 0.1); this.vx = dir * (p.push || 3) * 0.8; this.invuln = 0; return dmg; }
@@ -144,16 +167,17 @@ export class Fighter {
       case 'walk': i = Math.floor(t * fps / 60) % n; if (this.walkBack) i = n - 1 - i; break;
       case 'crouch': i = Math.min(n - 1, Math.floor(t / 4)); break;
       case 'block': i = this.crouching ? n - 1 : Math.min(n - 1, Math.floor(t / 4)); break;
-      case 'jump': if (this.act) return this.attackFrame(); i = this.vy > 4 ? 1 : this.vy > -3 ? 2 : 3; if (this.t < 3) i = 0; i = Math.min(n - 1, i); break;
+      case 'jump': if (this.act) return this.attackFrame();
+        if (this.t < 3 || n < 2) i = 0; else i = 1 + Math.floor((1 - (Math.max(-1, Math.min(1, this.vy / this.jumpV)) + 1) / 2) * (n - 1)); break;
       case 'attack': return this.attackFrame();
-      case 'move': { const [ph, pt] = this.movePhase(), m = this.mv; const sp = meta.spawn ?? 3;
-        if (ph === 'startup') i = Math.min(sp - 1, Math.floor(pt / Math.max(1, m.startup) * sp));
-        else if (ph === 'active') i = this.spin ? 2 + (Math.floor(pt / 4) % 3) : Math.min(n - 2, sp + Math.floor(pt / 6) % 2);
-        else i = Math.min(n - 1, sp + 2); break; }
-      case 'hit': i = t < 6 ? 0 : Math.min(n - 1, 1); break;
-      case 'down': case 'ko': i = this.y > 30 ? 1 : this.y > 0 ? 2 : (this.downT > 4 ? n - 1 : 2); if (this.t < 4) i = 0; break;
-      case 'getup': i = Math.max(0, n - 1 - Math.floor(t / 5)); break;
-      case 'win': i = 2 + (Math.floor(t / 14) % 3); break;
+      case 'move': i = this.moveFrameIndex(); break;
+      case 'hit': i = Math.floor(t * fps / 60); break;                       // play through once, hold last
+      case 'held': i = Math.min(1, n - 1); break;                            // tumbling KO frame while carried overhead
+      case 'down': case 'ko': { const air = Math.max(1, n - 2);
+        if (this.t < 4) i = 0; else if (this.y > 0) i = this.vy > 0 ? Math.min(air, 1 + Math.floor(this.t / 8)) : air; else i = this.downT > 4 ? n - 1 : air; break; }
+      case 'getup': i = Math.max(0, n - 1 - Math.floor(t * fps / 60)); break;
+      case 'win': { const sp = Math.min(n - 1, this.meta('special').spawn ?? Math.floor(n / 2)), lo = Math.max(0, sp - 1), hi = Math.max(lo, n - 2);
+        i = lo + (Math.floor(t * fps / 120) % (hi - lo + 1)); break; }
     }
     return fr[Math.max(0, Math.min(n - 1, i))];
   }
@@ -169,8 +193,11 @@ export class Fighter {
     const f = this.frame(); if (!f) return;
     const sx = Math.round(this.x - cam), sy = Math.round(FLOOR_Y - this.y);
     // shadow
-    ctx.fillStyle = 'rgba(0,0,0,0.35)'; const sw = Math.max(20, 56 - this.y * 0.2); ctx.fillRect(sx - sw / 2, FLOOR_Y - 3, sw, 5);
-    if (this.state === 'move' && this.mv && this.mv.draw) { const [ph, pt] = this.movePhase(); this.mv.draw(ctx, this, F, sx, sy, ph, pt); }
+    { const k = Math.max(0.35, 1 - this.y / 220), rw = (this.art.frameW || 96) * 0.32 * k; ctx.save(); ctx.globalAlpha = 0.42 * k; ctx.fillStyle = '#000';
+      ctx.beginPath(); ctx.ellipse(sx, FLOOR_Y - 1, rw, 5 * k + 1, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore(); }
+    if (this.state === 'move' && this.mv) { const [ph, pt] = this.movePhase(); const su = this.art.super;
+      if (this.mv.isSuper && su && !this.mv.spawnsProjectiles) { if (ph === 'active') drawStrip(ctx, su, sx, sy - 56, this.facing, pt); }
+      else if (this.mv.draw) this.mv.draw(ctx, this, F, sx, sy, ph, pt); }
     let face = this.facing; if (this.spin && (Math.floor(this.t / 4) % 2)) face = -face;
     const sq = this.act && this.act.crouch ? CROUCH_SQUASH : 1;
     const img = this.flash > 0 ? flashOf(f.img) : f.img;
