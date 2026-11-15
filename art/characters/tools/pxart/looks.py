@@ -59,3 +59,47 @@ def jade():
                 limb=0.70, torso=0.74, shoe=0.76, head=0.92, glove=0.80,
                 jaw=0.82, neck=0.80, female=True, hat="none",
                 hair_style="bun", sleeves=False, gloves=False, shoes="jazz")
+
+
+def dante():
+    """Dante 'High C' Reyes — cocky, compact-normal, dark skin, black hair, orange plume."""
+    s, sd, sl = _skin("#8D5524", "#5C3414", "#B5743A")
+    p, pl, pd = _plume("#FF9F1C")
+    return Look(skin=s, skin_dk=sd, skin_lt=sl, hair=_hair("#111111"),
+                plume=p, plume_lt=pl, plume_dk=pd,
+                limb=0.94, torso=0.96, shoe=0.94, head=0.98, glove=0.92,
+                jaw=1.00, neck=0.94, female=False, hat="shako",
+                hair_style="temples", sleeves=True, gloves=True, shoes="marching")
+
+
+def theo():
+    """Theo 'Slide' Washington — rangy normal, warm skin, brown hair, terra plume."""
+    s, sd, sl = _skin("#E0AC69", "#B07A3C", "#F0C98A")
+    p, pl, pd = _plume("#E76F51")
+    return Look(skin=s, skin_dk=sd, skin_lt=sl, hair=_hair("#5A3825"),
+                plume=p, plume_lt=pl, plume_dk=pd,
+                limb=0.90, torso=0.90, shoe=0.94, head=0.96, glove=0.90,
+                jaw=1.00, neck=0.92, female=False, hat="shako",
+                hair_style="temples", sleeves=True, gloves=True, shoes="marching")
+
+
+def maya():
+    """Maya 'Squeak' Patel — balanced medium, mid-brown skin, dark hair, lime plume."""
+    s, sd, sl = _skin("#C68642", "#8A5426", "#E0A86A")
+    p, pl, pd = _plume("#8AC926")
+    return Look(skin=s, skin_dk=sd, skin_lt=sl, hair=_hair("#3D2B1F"),
+                plume=p, plume_lt=pl, plume_dk=pd,
+                limb=0.82, torso=0.86, shoe=0.88, head=0.95, glove=0.86,
+                jaw=0.90, neck=0.86, female=True, hat="shako",
+                hair_style="temples", sleeves=True, gloves=True, shoes="marching")
+
+
+def ozzie():
+    """Ozzie 'The Deep End' Lindqvist — tall and lanky, dark skin, black hair, violet plume."""
+    s, sd, sl = _skin("#8D5524", "#5C3414", "#B5743A")
+    p, pl, pd = _plume("#A78BFA")
+    return Look(skin=s, skin_dk=sd, skin_lt=sl, hair=_hair("#111111"),
+                plume=p, plume_lt=pl, plume_dk=pd,
+                limb=0.64, torso=0.68, shoe=0.82, head=0.88, glove=0.78,
+                jaw=0.90, neck=0.72, female=False, hat="shako",
+                hair_style="temples", sleeves=True, gloves=True, shoes="marching")

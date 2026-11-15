@@ -40,7 +40,7 @@ async def main():
         # --- full CPU vs CPU matches on every stage ---
         stages = [s['id'] for s in info['stages']]
         ids = [f['id'] for f in info['fighters']]
-        pairs = [('drummer', 'tuba'), ('xylophone', 'bassclarinet'), ('flute', 'trumpet'), ('trombone', 'clarinet'), ('colorguard', 'drummer'), ('clarinet', 'bassclarinet')]
+        pairs = [('drummer', 'tuba'), ('xylophone', 'bassclarinet'), ('colorguard', 'trombone'), ('flute', 'trumpet'), ('trombone', 'clarinet'), ('colorguard', 'drummer'), ('clarinet', 'bassclarinet')]
         matches = []
         for i, (a, c) in enumerate(pairs):
             st = stages[i % len(stages)]
@@ -61,27 +61,37 @@ async def main():
             check(res is not None, f'match {a} v {c} did not finish')
             if res: check(res['hits'] > 5, f'match {a} v {c}: too few hits ({res["hits"]})')
         report['matches'] = matches
-        # --- every special + super fires without errors ---
+        # --- every special (art + projectile per sheet.json) and super fires and lands ---
         moves = {}
-        for fid in ids:
-            out = await pg.evaluate(f"""(()=>{{ BAND.startFight({{mode:'versus',p1:BAND.fighter('{fid}'),p2:BAND.fighter('drummer'),stage:BAND.stage('football'),seed:5}});
-              const F=BAND.scene.fight; BAND.cpus=[null,null]; BAND.step(115); const me=F.f[0], op=F.f[1]; me.x=op.x-120; 
-              const res={{}};
-              const press=(k)=>{{BAND.ctl[0].virtual={{[k]:true}}; BAND.tick(); BAND.ctl[0].virtual={{}};}};
-              op.hp=op.maxHp; press('special'); res.specialState=me.state; let maxP=0, hit0=op.hp;
-              for(let i=0;i<90;i++){{ BAND.tick(); maxP=Math.max(maxP,F.projectiles.length); if(i===14) BAND.render(); }}
-              res.specialDmg=hit0-op.hp; res.specialProj=maxP;
-              F.f[1].reset(me.x+120,-1); F.f[1].state='idle'; me.reset(me.x,1); me.state='idle'; me.meter=100; hit0=op.hp; press('super'); res.superState=me.state; res.freeze=!!F.freeze;
-              for(let i=0;i<30;i++) BAND.tick(); BAND.render();
-              return res; }})()""")
-            await shot(pg, f'2_super_{fid}')
-            out2 = await pg.evaluate("""(()=>{ const F=BAND.scene.fight, op=F.f[1]; const h=op.hp; for(let i=0;i<160;i++) BAND.tick(); BAND.render(); return {superDmg: op.maxHp - op.hp}; })()""")
-            out.update(out2); moves[fid] = out
+        stg = [s['id'] for s in info['stages']]
+        SETUP = """(()=>{{ BAND.startFight({{mode:'versus',p1:BAND.fighter('{fid}'),p2:BAND.fighter('{opp}'),stage:BAND.stage('{st}'),seed:5}});
+              const F=BAND.scene.fight; BAND.cpus=[null,null]; BAND.step(115); const me=F.f[0], op=F.f[1];
+              me.x = op.x - ('{fid}'==='tuba' ? 60 : 260); BAND.tick();
+              BAND.ctl[0].virtual={{special:true}}; BAND.tick(); BAND.ctl[0].virtual={{}};
+              const res={{png: me.art.source, specialState: me.state, hp0: op.hp, spawnFrame: null, pngProjectile: false, sheetSpawn: me.meta('special').spawn}};
+              for(let i=0;i<70;i++){{ const before=F.projectiles.length; BAND.tick();
+                 if(F.projectiles.length>before && res.spawnFrame===null){{ res.spawnFrame = me.state==='move' ? me.moveFrameIndex() : -1; res.pngProjectile = F.projectiles.some(p=>p.usePng); res.held = op.state; }}
+                 if((F.projectiles.length && F.projectiles[0].age>=6) || ('{fid}'==='tuba' && res.spawnFrame!==null)) break; }}
+              BAND.render(); window.__res = res; return res; }})()"""
+        for k, fid in enumerate(ids):
+            opp = 'tuba' if fid != 'tuba' else 'flute'
+            out = await pg.evaluate(SETUP.format(fid=fid, opp=opp, st=stg[k % 3]))
+            await shot(pg, f'20_special_{fid}')
+            out2 = await pg.evaluate("""(()=>{ const F=BAND.scene.fight, op=F.f[1]; for(let i=0;i<90;i++) BAND.tick(); return {specialDmg: window.__res.hp0 - op.hp}; })()""")
+            out.update(out2)
+            sup = await pg.evaluate("""(()=>{ const F=BAND.scene.fight; BAND.step(120); const me=F.f[0], op=F.f[1]; op.reset(me.x+130,-1); op.state='idle'; me.state='idle'; me.meter=100; const h=op.hp;
+              BAND.ctl[0].virtual={super:true}; BAND.tick(); BAND.ctl[0].virtual={}; const st=me.state, fr=!!F.freeze; for(let i=0;i<200;i++) BAND.tick(); return {superState:st, freeze:fr, superDmg:h-op.hp}; })()""")
+            out.update(sup); moves[fid] = out
+            check(out['png'] == 'png', f'{fid}: not using sheet art')
             check(out['specialState'] == 'move', f'{fid}: special did not start')
-            check(out['superState'] == 'move' and out['freeze'], f'{fid}: super did not start')
-            check(out['superDmg'] > 0, f'{fid}: super did no damage')
+            check(out['specialDmg'] > 0, f'{fid}: special did no damage')
+            check(out['pngProjectile'], f'{fid}: special did not use projectile.png')
+            if fid != 'tuba': check(out['spawnFrame'] == out['sheetSpawn'], f'{fid}: projectile spawned on frame {out["spawnFrame"]}, sheet says {out["sheetSpawn"]}')
+            else: check(out['spawnFrame'] == 4 and out.get('held') in ('held', 'down') and out['specialDmg'] >= 100, f'tuba: slam/shock wrong (frame {out["spawnFrame"]}, opp {out.get("held")})')
+            check(out['superState'] == 'move' and out['freeze'] and out['superDmg'] > 0, f'{fid}: super failed')
         report['moves'] = moves
-        # special screenshot for the drummer's png projectile
+        await pg.evaluate("BAND.startFight({mode:'versus',p1:BAND.fighter('trumpet'),p2:BAND.fighter('drummer'),stage:BAND.stage('football'),seed:5}); BAND.cpus=[null,null]; BAND.step(115); BAND.scene.fight.f[1].meter=100; BAND.ctl[1].virtual={super:true}; BAND.tick(); BAND.ctl[1].virtual={}; BAND.step(20)")
+        await shot(pg, '21_super_freeze')
         await pg.evaluate("""(()=>{ BAND.startFight({mode:'versus',p1:BAND.fighter('drummer'),p2:BAND.fighter('bassclarinet'),stage:BAND.stage('lockerroom'),seed:5}); BAND.cpus=[null,null]; BAND.step(115);
            const F=BAND.scene.fight; F.f[0].x = F.f[1].x - 250; BAND.ctl[0].virtual={special:true}; BAND.tick(); BAND.ctl[0].virtual={}; BAND.step(26); })()""")
         await shot(pg, '30_drummer_png_shockwave')

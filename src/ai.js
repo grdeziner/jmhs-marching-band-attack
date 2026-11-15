@@ -37,7 +37,7 @@ export class CPU {
     }
     // close range
     if (o.state === 'jump' && o.y > 40 && r() < reactChance * 0.4) return set({ punch: true }, 1);
-    if (type === 'grab' && d < 70 && act < 0.05 * L) return set({ special: true }, 1);
+    if ((type === 'grab' || type === 'slam') && d < 75 && act < 0.05 * L) return set({ special: true }, 1);
     if (act < 0.035 * L + 0.02) return set({ punch: true }, 1);
     if (act < 0.06 * L + 0.03) return set({ kick: true, down: r() < 0.35 }, 1);
     if (act < 0.06 * L + 0.06) return set({ down: true, kick: true }, 1);

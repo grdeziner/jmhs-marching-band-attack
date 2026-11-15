@@ -11,6 +11,7 @@ from .body import (
     FRAME_W,
     Look,
     Pose,
+    shift_pose_to_frame,
     draw_arm,
     draw_glove,
     draw_guard_torso,
@@ -106,6 +107,7 @@ def render_character(
     paint_front — weapons, flag, bell, mallets in front of the hands
     paint_flash — un-outlined impact flashes on top
     """
+    pose = shift_pose_to_frame(pose)
     look = get_look(pose)
     out = new_layer()
     leg_over = getattr(pose, "leg_over", None)

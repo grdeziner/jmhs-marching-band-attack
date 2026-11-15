@@ -1,0 +1,215 @@
+{
+  "id": "clarinet",
+  "name": "Maya \"Squeak\" Patel",
+  "instrument": "Clarinet",
+  "frameWidth": 96,
+  "frameHeight": 112,
+  "anchor": {
+    "x": 48,
+    "y": 111
+  },
+  "facing": "right",
+  "scale": 3,
+  "scaleFilter": "nearest",
+  "background": "transparent",
+  "palette": [
+    "#0A0B10",
+    "#0C1734",
+    "#17305F",
+    "#3A5A9C",
+    "#7A5410",
+    "#D4A017",
+    "#F5DE6A",
+    "#F6F2EA",
+    "#B9B3A6",
+    "#8B8578",
+    "#8E4E2C",
+    "#F5C49A",
+    "#1A1210",
+    "#141418",
+    "#3A3A42",
+    "#8A3040",
+    "#B8DE7C",
+    "#8AC926",
+    "#4B6E14",
+    "#3D2B1F",
+    "#E0A86A",
+    "#C68642",
+    "#8A5426",
+    "#9A6833",
+    "#4E7A14"
+  ],
+  "animations": {
+    "idle": {
+      "row": 0,
+      "frames": 4,
+      "fps": 6,
+      "loop": true,
+      "hurtbox": {
+        "x": 30,
+        "y": 10,
+        "w": 40,
+        "h": 101
+      }
+    },
+    "walk": {
+      "row": 1,
+      "frames": 6,
+      "fps": 10,
+      "loop": true,
+      "hurtbox": {
+        "x": 30,
+        "y": 10,
+        "w": 40,
+        "h": 101
+      }
+    },
+    "jump": {
+      "row": 2,
+      "frames": 4,
+      "fps": 10,
+      "loop": false,
+      "hurtbox": {
+        "x": 30,
+        "y": 10,
+        "w": 40,
+        "h": 101
+      }
+    },
+    "crouch": {
+      "row": 3,
+      "frames": 2,
+      "fps": 8,
+      "loop": true,
+      "hurtbox": {
+        "x": 28,
+        "y": 26,
+        "w": 42,
+        "h": 85
+      }
+    },
+    "block": {
+      "row": 4,
+      "frames": 2,
+      "fps": 8,
+      "loop": true,
+      "hurtbox": {
+        "x": 30,
+        "y": 10,
+        "w": 40,
+        "h": 101
+      }
+    },
+    "punch": {
+      "row": 5,
+      "frames": 3,
+      "fps": 12,
+      "loop": false,
+      "hurtbox": {
+        "x": 30,
+        "y": 10,
+        "w": 40,
+        "h": 101
+      },
+      "hitbox": {
+        "frames": [
+          1
+        ],
+        "x": 78,
+        "y": 34,
+        "w": 18,
+        "h": 18
+      }
+    },
+    "kick": {
+      "row": 6,
+      "frames": 4,
+      "fps": 12,
+      "loop": false,
+      "hurtbox": {
+        "x": 30,
+        "y": 10,
+        "w": 40,
+        "h": 101
+      },
+      "hitbox": {
+        "frames": [
+          1,
+          2
+        ],
+        "x": 72,
+        "y": 50,
+        "w": 22,
+        "h": 18
+      }
+    },
+    "special": {
+      "row": 7,
+      "frames": 6,
+      "fps": 10,
+      "loop": false,
+      "hurtbox": {
+        "x": 30,
+        "y": 10,
+        "w": 40,
+        "h": 101
+      },
+      "hitbox": {
+        "frames": [
+          2,
+          3
+        ],
+        "x": 80,
+        "y": 28,
+        "w": 16,
+        "h": 22
+      },
+      "spawn_projectile_on": 2
+    },
+    "hit": {
+      "row": 8,
+      "frames": 2,
+      "fps": 10,
+      "loop": false,
+      "hurtbox": {
+        "x": 30,
+        "y": 10,
+        "w": 40,
+        "h": 101
+      }
+    },
+    "ko": {
+      "row": 9,
+      "frames": 4,
+      "fps": 8,
+      "loop": false,
+      "hurtbox": {
+        "x": 8,
+        "y": 40,
+        "w": 80,
+        "h": 71
+      }
+    }
+  },
+  "notes": "Balanced medium build. The clarinet is a short dark baton / sword for slashes and stabs. Special is a lime-gold swarm of squeaky reed notes. Lime plume.",
+  "projectile": {
+    "file": "projectile.png",
+    "frameWidth": 96,
+    "frameHeight": 48,
+    "frames": 6,
+    "fps": 14,
+    "loop": false,
+    "anchor": {
+      "x": 8,
+      "y": 28
+    },
+    "notes": "Squeaky reed note-swarm. Spawn on special frame index 2, origin at the clarinet bell, scattering right and slightly up."
+  },
+  "files": {
+    "sheet": "sheet.png",
+    "portrait": "portrait.png",
+    "preview": "preview.gif",
+    "previewSheet4x": "preview_sheet_4x.png",
+    "projectile": "projectile.png"
+  }
+}

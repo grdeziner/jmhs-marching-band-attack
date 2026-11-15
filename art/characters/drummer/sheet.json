@@ -2,10 +2,10 @@
   "id": "drummer",
   "name": "Marcus \"Thunder\" Boone",
   "instrument": "Marching Bass Drum",
-  "frameWidth": 96,
+  "frameWidth": 128,
   "frameHeight": 112,
   "anchor": {
-    "x": 48,
+    "x": 64,
     "y": 111
   },
   "facing": "right",
@@ -13,65 +13,56 @@
   "scaleFilter": "nearest",
   "background": "transparent",
   "palette": [
-    "#0A0B10",
-    "#0C1734",
-    "#17305F",
-    "#3A5A9C",
-    "#7A5410",
-    "#D4A017",
-    "#F5DE6A",
-    "#F6F2EA",
-    "#B9B3A6",
-    "#8E4E2C",
-    "#E09A68",
-    "#F5C49A",
-    "#1A1210",
-    "#5A3016",
-    "#A05A28",
-    "#C47A44",
-    "#141418",
-    "#3A3A42",
-    "#EDE6D2",
-    "#C4B99A",
-    "#8F866C",
-    "#8A3040",
-    "#D07058",
-    "#FFF6C8"
+    "#4A6AB5",
+    "#28448C",
+    "#162854",
+    "#0C142C",
+    "#FFF1A0",
+    "#D4A018",
+    "#966010",
+    "#50340A",
+    "#F3C9A0",
+    "#C48A58",
+    "#7A4A28",
+    "#FFFBF0",
+    "#C8C0B0",
+    "#7A7268",
+    "#100E14"
   ],
   "animations": {
     "idle": {
       "row": 0,
-      "frames": 4,
-      "fps": 6,
+      "frames": 6,
+      "fps": 8,
       "loop": true,
       "hurtbox": {
-        "x": 26,
-        "y": 10,
-        "w": 52,
-        "h": 101
+        "x": 42,
+        "y": 8,
+        "w": 56,
+        "h": 103
       }
     },
     "walk": {
       "row": 1,
-      "frames": 6,
+      "frames": 8,
       "fps": 10,
       "loop": true,
       "hurtbox": {
-        "x": 20,
-        "y": 10,
-        "w": 58,
-        "h": 101
+        "x": 42,
+        "y": 8,
+        "w": 56,
+        "h": 103
       }
     },
     "jump": {
       "row": 2,
-      "frames": 4,
+      "frames": 6,
       "fps": 10,
       "loop": false,
       "hurtbox": {
-        "x": 24,
+        "x": 40,
         "y": 8,
-        "w": 54,
+        "w": 58,
         "h": 96
       }
     },
@@ -81,10 +72,10 @@
       "fps": 8,
       "loop": true,
       "hurtbox": {
-        "x": 24,
-        "y": 22,
-        "w": 54,
-        "h": 89
+        "x": 40,
+        "y": 28,
+        "w": 58,
+        "h": 83
       }
     },
     "block": {
@@ -93,128 +84,147 @@
       "fps": 8,
       "loop": true,
       "hurtbox": {
-        "x": 28,
-        "y": 14,
-        "w": 56,
-        "h": 97
+        "x": 44,
+        "y": 16,
+        "w": 60,
+        "h": 95
       },
       "blockbox": {
-        "x": 48,
-        "y": 40,
-        "w": 32,
+        "x": 64,
+        "y": 44,
+        "w": 36,
         "h": 40
       }
     },
     "punch": {
       "row": 5,
-      "frames": 3,
-      "fps": 12,
-      "loop": false,
-      "hurtbox": {
-        "x": 24,
-        "y": 10,
-        "w": 54,
-        "h": 101
-      },
-      "hitbox": {
-        "frames": [
-          1
-        ],
-        "x": 80,
-        "y": 32,
-        "w": 16,
-        "h": 20
-      }
-    },
-    "kick": {
-      "row": 6,
       "frames": 4,
       "fps": 12,
       "loop": false,
       "hurtbox": {
-        "x": 22,
-        "y": 12,
-        "w": 50,
-        "h": 99
+        "x": 42,
+        "y": 8,
+        "w": 56,
+        "h": 103
       },
       "hitbox": {
         "frames": [
           1,
           2
         ],
-        "x": 72,
-        "y": 52,
-        "w": 22,
-        "h": 18
+        "x": 108,
+        "y": 34,
+        "w": 18,
+        "h": 22
+      }
+    },
+    "kick": {
+      "row": 6,
+      "frames": 5,
+      "fps": 12,
+      "loop": false,
+      "hurtbox": {
+        "x": 42,
+        "y": 8,
+        "w": 56,
+        "h": 103
+      },
+      "hitbox": {
+        "frames": [
+          1,
+          2,
+          3
+        ],
+        "x": 100,
+        "y": 48,
+        "w": 26,
+        "h": 22
       }
     },
     "special": {
       "row": 7,
-      "frames": 6,
+      "frames": 8,
       "fps": 10,
       "loop": false,
       "hurtbox": {
-        "x": 26,
-        "y": 10,
-        "w": 54,
-        "h": 101
+        "x": 42,
+        "y": 8,
+        "w": 56,
+        "h": 103
       },
       "hitbox": {
         "frames": [
-          3,
-          4
+          4,
+          5
         ],
-        "x": 54,
-        "y": 28,
-        "w": 34,
+        "x": 70,
+        "y": 36,
+        "w": 36,
         "h": 40
       },
-      "spawn_projectile_on": 3
+      "spawn_projectile_on": 4
     },
     "hit": {
       "row": 8,
-      "frames": 2,
+      "frames": 3,
       "fps": 10,
       "loop": false,
       "hurtbox": {
-        "x": 16,
+        "x": 28,
         "y": 10,
-        "w": 56,
+        "w": 60,
         "h": 101
       }
     },
     "ko": {
       "row": 9,
-      "frames": 4,
+      "frames": 6,
       "fps": 8,
       "loop": false,
       "hurtbox": {
-        "x": 8,
+        "x": 16,
         "y": 40,
-        "w": 80,
+        "w": 96,
         "h": 71
       }
     }
   },
+  "notes": "16-bit SNES / Street Fighter II Turbo redraw of Marcus \"Thunder\" Boone. 15 opaque colors plus transparent. 128x112 frames, anchor {x:64, y:111}. Heavy marching bassist; bass drum on a harness, two mallets. Special slam spawns the shockwave on frame 4. portrait_large.png is the 128x128 VS-screen bust.",
   "projectile": {
     "file": "projectile.png",
-    "frameWidth": 80,
+    "frameWidth": 96,
     "frameHeight": 64,
     "frames": 6,
     "fps": 12,
     "loop": false,
     "anchor": {
-      "x": 6,
+      "x": 8,
       "y": 32
     },
-    "notes": "Expanding sound-shockwave blast. Spawn on special frame index 3 (the mallet slam), origin at the front of the bass drum, travelling right."
+    "notes": "16-bit gold shockwave. Spawn on special frame index 4 (the mallet slam), origin at the front of the bass drum, travelling right."
   },
-  "notes": "3/4 view, facing right. Game flips the sprite for the left side. Feet sit on the bottom of the frame; anchor is bottom-center (48, 111). Jump / KO poses stay in the same frame space \u2014 the game moves the entity. Special frame 3 slams the drum and should spawn projectile.png. Palette is navy + gold + white trim. Official fighter name is Marcus \"Thunder\" Boone (see content/characters/drummer.json).",
+  "super": {
+    "file": "super.png",
+    "frameWidth": 128,
+    "frameHeight": 80,
+    "frames": 6,
+    "fps": 12,
+    "loop": false,
+    "anchor": {
+      "x": 64,
+      "y": 72
+    },
+    "notes": "16-bit thunder super: metallic gold-white shock rings with a dark core, speculars, and lightning ticks. Anchor is bottom-center of each 128x80 frame, at the fighter's feet / drum."
+  },
   "files": {
     "sheet": "sheet.png",
     "portrait": "portrait.png",
-    "projectile": "projectile.png",
     "preview": "preview.gif",
-    "previewSheet4x": "preview_sheet_4x.png"
-  }
+    "previewSheet4x": "preview_sheet_4x.png",
+    "portraitLarge": "portrait_large.png",
+    "projectile": "projectile.png",
+    "super": "super.png",
+    "compare8bitVs16bit": "compare_8bit_vs_16bit.png"
+  },
+  "opaqueColorCount": 15
 }

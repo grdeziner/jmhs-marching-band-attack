@@ -1,5 +1,5 @@
 {
-  "_readme": "Editable roster. 'enabled' fighters appear on the select grid in 'order'. 'look' drives the placeholder art (ignored when art/characters/<id>/sheet.png exists). 'special'/'super' pick a move 'type' from src/moves.js and tune it with the numbers here. Story text (name/taunt/winQuote/ending) in content/characters/<id>.json overrides what is here. Story fields come from content/characters/<id>.json; the empty taunt/winQuote here are fallbacks.",
+  "_readme": "Editable roster. 'enabled' fighters appear on the select grid in 'order'. 'look' only drives placeholder art (used when art/characters/<id>/sheet.png is missing). 'special'/'super' pick a move 'type' from src/moves.js and tune it. For art projectiles, 'spawn' {x: px in front of the feet, y: px above the floor} is where projectile.png's sheet.json anchor is placed; 'rise' = upward drift px/frame; 'meleeDamage' = damage of the sheet's special hitbox frames. Story text (name/taunt/winQuote/ending) comes from content/characters/<id>.json.",
   "settings": {
     "roundsToWin": 2,
     "roundTime": 99,
@@ -36,7 +36,12 @@
         "kind": "wave",
         "color": "#f5de6a",
         "sound": "bassdrum",
-        "knockdown": false
+        "knockdown": false,
+        "spawn": {
+          "x": 40,
+          "y": 51
+        },
+        "meleeDamage": 35
       },
       "super": {
         "type": "barrage",
@@ -73,12 +78,18 @@
         "build": "slim"
       },
       "special": {
-        "type": "rush",
-        "name": "ARPEGGIO RUN",
-        "damage": 14,
-        "hits": 5,
-        "speed": 6,
-        "frames": 28,
+        "type": "projectile",
+        "name": "ARPEGGIO CHIMES",
+        "damage": 50,
+        "speed": 4.5,
+        "rise": 0.2,
+        "life": 150,
+        "kind": "bars",
+        "spawn": {
+          "x": 32,
+          "y": 56
+        },
+        "meleeDamage": 30,
         "sound": "bells"
       },
       "super": {
@@ -120,7 +131,12 @@
         "damage": 45,
         "speed": 10,
         "kind": "note",
-        "sound": "flute"
+        "sound": "flute",
+        "spawn": {
+          "x": 44,
+          "y": 72
+        },
+        "meleeDamage": 25
       },
       "super": {
         "type": "tornado",
@@ -162,7 +178,12 @@
         "speed": 8,
         "kind": "wave",
         "color": "#ffd23f",
-        "sound": "trumpet"
+        "sound": "trumpet",
+        "spawn": {
+          "x": 46,
+          "y": 71
+        },
+        "meleeDamage": 25
       },
       "super": {
         "type": "beam",
@@ -199,11 +220,18 @@
         "build": "normal"
       },
       "special": {
-        "type": "poke",
-        "name": "SLIDE JAB",
-        "damage": 65,
-        "reach": 150,
-        "frames": 14,
+        "type": "projectile",
+        "name": "SLIDE BLAST",
+        "damage": 60,
+        "speed": 4.5,
+        "life": 50,
+        "kind": "wave",
+        "color": "#e8b923",
+        "spawn": {
+          "x": 46,
+          "y": 58
+        },
+        "meleeDamage": 45,
         "sound": "trombone"
       },
       "super": {
@@ -241,10 +269,14 @@
         "build": "big"
       },
       "special": {
-        "type": "grab",
+        "type": "slam",
         "name": "BELL-LOOP SLAM",
-        "damage": 120,
-        "range": 70,
+        "damage": 130,
+        "range": 72,
+        "spawn": {
+          "x": 10,
+          "y": 0
+        },
         "sound": "tuba"
       },
       "super": {
@@ -287,7 +319,13 @@
         "speed": 8,
         "kind": "squeak",
         "stun": 40,
-        "sound": "clarinet"
+        "sound": "clarinet",
+        "spawn": {
+          "x": 44,
+          "y": 67
+        },
+        "rise": 0.25,
+        "meleeDamage": 25
       },
       "super": {
         "type": "rush",
@@ -332,7 +370,13 @@
         "kind": "drone",
         "size": 2,
         "knockdown": true,
-        "sound": "bassclarinet"
+        "sound": "bassclarinet",
+        "spawn": {
+          "x": 40,
+          "y": 4
+        },
+        "low": true,
+        "meleeDamage": 30
       },
       "super": {
         "type": "vacuum",
@@ -368,11 +412,16 @@
         "build": "slim"
       },
       "special": {
-        "type": "boomerang",
-        "name": "FLAG TOSS",
+        "type": "projectile",
+        "name": "FLAG FLOURISH",
         "damage": 45,
-        "speed": 6,
+        "speed": 5.5,
         "kind": "flag",
+        "spawn": {
+          "x": 36,
+          "y": 80
+        },
+        "meleeDamage": 40,
         "sound": "snare"
       },
       "super": {

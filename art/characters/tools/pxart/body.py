@@ -41,10 +41,36 @@ from .palette import (
     shade,
 )
 
-FRAME_W = 96
+FRAME_W = 128
 FRAME_H = 112
-ANCHOR_X = 48
+ANCHOR_X = 64
 ANCHOR_Y = 111  # ground line / bottom-center of the feet
+# Poses were authored in a 96-wide frame (anchor x=48). They are shifted
+# into the 128-wide frame so joints sit on the new bottom-center.
+POSE_ORIGIN_X = 16
+# Opaque pixels must stay this many pixels inside the left, right, and top
+# edges (the generator validates this). The bottom is the ground line.
+EDGE_MARGIN = 2
+
+# Joint / prop keys that live in frame pixel space (used by the origin shift).
+POSE_POINT_KEYS = (
+    "face", "sh_l", "sh_r", "el_l", "el_r", "hd_l", "hd_r",
+    "hip", "hip_l", "hip_r", "kn_l", "kn_r", "an_l", "an_r",
+    "toe_l", "toe_r", "inst", "mal_l", "mal_r",
+)
+
+
+def shift_pose_to_frame(pose: "Pose") -> "Pose":
+    """Return a copy of `pose` with joints shifted into 128-wide frame space."""
+    p = pose.copy()
+    dx = POSE_ORIGIN_X
+    if not dx:
+        return p
+    for k in POSE_POINT_KEYS:
+        v = getattr(p, k, None)
+        if v is not None:
+            setattr(p, k, (v[0] + dx, v[1]))
+    return p
 
 
 def ang(deg: float) -> Tuple[float, float]:
@@ -528,10 +554,11 @@ def _face_features(c: Canvas, fx: float, fy: float, expression: str, look: Look 
     c.set(nx + 1, ny + 1, SKIN_DK)
     c.set(nx, ny - 1, SKIN_LT)
 
-    # blush
+    # blush — one muted pixel per cheek (darker skin, not a bright pink blob)
     if expression not in ("ko",):
-        c.set(ix - 6, iy + 3, BLUSH)
-        c.set(ix + 6, iy + 3, BLUSH)
+        blush = shade(look.skin, 0.78)
+        c.set(ix - 6, iy + 3, blush)
+        c.set(ix + 6, iy + 3, blush)
 
     # mouth
     mx, my = ix + 1, iy + 7
@@ -573,28 +600,35 @@ def draw_plume(c: Canvas, top_x: float, top_y: float, look: Look = None) -> None
     mid, lt, dk = look.plume, look.plume_lt, look.plume_dk
     # socket + quill
     c.shade_disk(top_x, top_y + 1.2, 1.7, GOLD, GOLD_LT, GOLD_DK)
-    c.taper_capsule(top_x, top_y + 1, top_x + 1.4, top_y - 11, 0.7, 0.5, dk)
+    # Tip sits this many pixels above the socket. Clamp also accounts for
+    # barb radii, the raster pad, and a 1px auto_outline so the plume
+    # stays inside EDGE_MARGIN when a pose lifts the head.
+    tip = 8
+    clearance = 11  # tip + barb + outline
+    if top_y - clearance < EDGE_MARGIN:
+        top_y = top_y + (EDGE_MARGIN - (top_y - clearance))
+    c.taper_capsule(top_x, top_y + 1, top_x + 1.4, top_y - tip + 2, 0.7, 0.5, dk)
     # paired barbs left and right of the quill, tapering toward the tip
     barbs = [
         # (dx, dy, rx, ry)
-        (-2.2, -2.0, 2.4, 1.6),
-        ( 2.4, -2.4, 2.2, 1.5),
-        (-2.4, -4.4, 2.2, 1.6),
-        ( 2.6, -4.8, 2.2, 1.5),
-        (-2.0, -6.8, 1.9, 1.5),
-        ( 2.8, -7.2, 1.8, 1.4),
-        (-1.6, -9.0, 1.5, 1.3),
-        ( 2.6, -9.4, 1.4, 1.2),
-        ( 0.4, -11.2, 1.2, 1.1),
-        ( 2.0, -12.0, 1.0, 1.0),
+        (-2.2, -1.2, 2.4, 1.6),
+        ( 2.4, -1.5, 2.2, 1.5),
+        (-2.4, -2.8, 2.2, 1.6),
+        ( 2.6, -3.1, 2.2, 1.5),
+        (-2.0, -4.4, 1.9, 1.5),
+        ( 2.8, -4.7, 1.8, 1.4),
+        (-1.6, -5.8, 1.5, 1.3),
+        ( 2.6, -6.1, 1.4, 1.2),
+        ( 0.4, -7.2, 1.2, 1.1),
+        ( 2.0, -7.8, 1.0, 1.0),
     ]
     for dx, dy, rx, ry in barbs:
         c.shade_ellipse(top_x + dx, top_y + dy, rx, ry, mid, lt, dk, light_dir=(-0.65, -0.35))
     # a couple of separated tip wisps
-    c.set(int(round(top_x + 0.0)), int(round(top_y - 13)), lt)
-    c.set(int(round(top_x + 2.0)), int(round(top_y - 13)), mid)
-    c.set(int(round(top_x - 1.0)), int(round(top_y - 12)), mid)
-    c.set(int(round(top_x + 3.0)), int(round(top_y - 12)), lt)
+    c.set(int(round(top_x + 0.0)), int(round(top_y - tip)), lt)
+    c.set(int(round(top_x + 2.0)), int(round(top_y - tip)), mid)
+    c.set(int(round(top_x - 1.0)), int(round(top_y - tip + 1)), mid)
+    c.set(int(round(top_x + 3.0)), int(round(top_y - tip + 1)), lt)
 
 
 def draw_shako(c: Canvas, fx: float, fy: float) -> Tuple[float, float]:
@@ -667,33 +701,42 @@ def draw_shako(c: Canvas, fx: float, fy: float) -> Tuple[float, float]:
 
 
 def draw_hair(c: Canvas, fx, fy, look: Look, hs: float) -> None:
-    """Hair that is visible without a shako, or temple hair under a shako."""
+    """Hair that is visible without a shako, or temple hair under a shako.
+
+    For bun / pony (hair up) the hair stays on the crown and back so the
+    3/4 face — forehead, brows, eyes, nose, mouth — stays clearly visible.
+    """
     h_lt, h_mid, h_dk = look.hair_shade()
     style = look.hair_style
     if look.hat == "shako" or style == "temples":
-        c.shade_ellipse(fx - 9 * hs, fy - 2, 2.8 * hs, 4.0 * hs, h_mid, h_lt, h_dk)
-        c.shade_ellipse(fx + 9 * hs, fy - 1, 2.2 * hs, 3.2 * hs, h_mid, h_lt, h_dk)
+        # solid hair color under a shako (no extra shade tones)
+        c.shade_ellipse(fx - 9 * hs, fy - 2, 2.8 * hs, 4.0 * hs, h_mid, h_mid, h_mid)
+        c.shade_ellipse(fx + 9 * hs, fy - 1, 2.2 * hs, 3.2 * hs, h_mid, h_mid, h_mid)
         if look.hat == "shako":
             return
-    # skull cap of hair
-    c.shade_ellipse(fx, fy - 5 * hs, 11.0 * hs, 8.5 * hs, h_mid, h_lt, h_dk)
-    # side locks
-    c.shade_ellipse(fx - 10 * hs, fy + 1, 3.0 * hs, 5.0 * hs, h_mid, h_lt, h_dk)
-    c.shade_ellipse(fx + 10 * hs, fy + 1, 2.6 * hs, 4.4 * hs, h_mid, h_lt, h_dk)
     if style == "short":
+        c.shade_ellipse(fx, fy - 7 * hs, 10.5 * hs, 5.5 * hs, h_mid, h_lt, h_dk)
+        c.shade_ellipse(fx - 10 * hs, fy - 2, 3.0 * hs, 4.0 * hs, h_mid, h_lt, h_dk)
+        c.shade_ellipse(fx + 10 * hs, fy - 2, 2.6 * hs, 3.6 * hs, h_mid, h_lt, h_dk)
         return
     if style in ("bun", "pony"):
-        # high bun, slightly back-left
-        bx, by = fx - 1 * hs, fy - 15 * hs
-        c.shade_ellipse(bx, by, 6.0 * hs, 5.5 * hs, h_mid, h_lt, h_dk)
-        # gold scrunchie / pin at the bun base
-        c.shade_ellipse(fx - 0.5 * hs, fy - 10.5 * hs, 3.4 * hs, 1.6 * hs, GOLD, GOLD_LT, GOLD_DK)
+        # Crown / back only. Hairline sits ABOVE the brows (brows are at fy-4).
+        # Do not cover the forehead or the eye line.
+        c.shade_ellipse(fx - 1 * hs, fy - 9.5 * hs, 10.2 * hs, 5.2 * hs, h_mid, h_lt, h_dk)
+        # volume behind the far ear (left), not over the cheek
+        c.shade_ellipse(fx - 11 * hs, fy - 3, 3.2 * hs, 4.4 * hs, h_mid, h_lt, h_dk)
+        # a slim temple tick on the right, above the eye
+        c.shade_ellipse(fx + 10 * hs, fy - 5, 2.2 * hs, 2.6 * hs, h_mid, h_lt, h_dk)
+        # high bun on top / slightly back
+        bx, by = fx - 1 * hs, fy - 16 * hs
+        c.shade_ellipse(bx, by, 6.2 * hs, 5.6 * hs, h_mid, h_lt, h_dk)
+        # gold scrunchie at the bun base (still above the forehead)
+        c.shade_ellipse(fx - 0.5 * hs, fy - 11.5 * hs, 3.4 * hs, 1.6 * hs, GOLD, GOLD_LT, GOLD_DK)
         if style == "pony":
-            # short upward tail off the bun
             c.shade_taper(bx + 2, by - 3, bx + 6, by - 10, 3.0 * hs, 1.6 * hs, h_mid, h_lt, h_dk)
-        # a couple of loose strands
-        c.set(int(fx + 8 * hs), int(fy + 4), h_mid)
-        c.set(int(fx + 9 * hs), int(fy + 6), h_dk)
+        return
+    # default loose cap (shouldn't cover the face plate; draw_head clears it)
+    c.shade_ellipse(fx, fy - 7 * hs, 10.5 * hs, 6.0 * hs, h_mid, h_lt, h_dk)
 
 
 def draw_head(c: Canvas, pose: Pose) -> None:
@@ -719,8 +762,16 @@ def draw_head(c: Canvas, pose: Pose) -> None:
         c.set(int(fx + 11), by, GOLD)
         c.set(int(fx + 10), by + 1, GOLD_DK)
     else:
-        # hair first so it sits on/around the skull, then features on top
+        # hair first (crown / bun / back), then re-stamp the face so the
+        # forehead and features are never buried in a hair mass.
         draw_hair(c, fx, fy, look, hs)
+        c.shade_ellipse(fx, fy + 1, 10.2 * hs, 11.0 * hs, look.skin, look.skin_lt, look.skin_dk)
+        c.shade_ellipse(fx + 0.5, fy + 6 * hs,
+                        9.2 * hs * (0.92 if look.female else 1.0) * look.jaw,
+                        7.2 * hs * look.jaw,
+                        look.skin, look.skin_lt, look.skin_dk)
+        # keep the far ear on top of the side hair
+        c.shade_ellipse(fx - 11 * hs, fy + 1, 2.6 * hs, 3.4 * hs, look.skin, look.skin_lt, look.skin_dk)
 
     _face_features(c, fx, fy, pose.expression, look=look)
 
