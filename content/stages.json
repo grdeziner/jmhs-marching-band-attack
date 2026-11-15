@@ -1,0 +1,23 @@
+{
+  "canvas": { "width": 320, "height": 180 },
+  "native": { "width": 640, "height": 360 },
+  "floorY": 320,
+  "drawOrder": ["far.png", "mid.png", "fighters", "anim_N.png"],
+  "stages": [
+    {
+      "id": "football",
+      "name": "Football Field",
+      "description": "Football field at night."
+    },
+    {
+      "id": "lockerroom",
+      "name": "Locker Room",
+      "description": "Locker room."
+    },
+    {
+      "id": "fastfood",
+      "name": "Fast Food",
+      "description": "A generic fast food restaurant."
+    }
+  ]
+}

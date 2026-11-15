@@ -1,0 +1,22 @@
+{
+  "image": "sheet.png",
+  "frameWidth": 96,
+  "frameHeight": 112,
+  "sheetWidth": 576,
+  "sheetHeight": 1120,
+  "columns": 6,
+  "facing": "right",
+  "anchor": "bottom-center",
+  "animations": [
+    { "name": "idle", "row": 0, "frames": 4 },
+    { "name": "walk", "row": 1, "frames": 6 },
+    { "name": "jump", "row": 2, "frames": 4 },
+    { "name": "crouch", "row": 3, "frames": 2 },
+    { "name": "block", "row": 4, "frames": 2 },
+    { "name": "punch", "row": 5, "frames": 3 },
+    { "name": "kick", "row": 6, "frames": 4 },
+    { "name": "special", "row": 7, "frames": 6 },
+    { "name": "hit", "row": 8, "frames": 2 },
+    { "name": "ko", "row": 9, "frames": 4 }
+  ]
+}

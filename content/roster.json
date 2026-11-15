@@ -1,0 +1,49 @@
+{
+  "fighters": [
+    {
+      "id": "drummer",
+      "name": "Drummer",
+      "placeholder": "Bass drum. Sound shockwaves."
+    },
+    {
+      "id": "xylophone",
+      "name": "Xylophone",
+      "placeholder": "Mallet sticks."
+    },
+    {
+      "id": "flute",
+      "name": "Flute",
+      "placeholder": "Flute used as a bashing weapon."
+    },
+    {
+      "id": "tuba",
+      "name": "Tuba",
+      "placeholder": "Tuba."
+    },
+    {
+      "id": "trumpet",
+      "name": "Trumpet",
+      "placeholder": "Trumpet."
+    },
+    {
+      "id": "trombone",
+      "name": "Trombone",
+      "placeholder": "Trombone."
+    },
+    {
+      "id": "clarinet",
+      "name": "Clarinet",
+      "placeholder": "Clarinet."
+    },
+    {
+      "id": "bassclarinet",
+      "name": "Bass Clarinet",
+      "placeholder": "Bass clarinet."
+    },
+    {
+      "id": "colorguard",
+      "name": "Color Guard",
+      "placeholder": "Acrobatic female color guard. Flag weapon."
+    }
+  ]
+}
