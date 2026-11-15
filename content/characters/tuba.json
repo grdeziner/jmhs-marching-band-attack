@@ -1,0 +1,16 @@
+{
+  "id": "tuba",
+  "name": "Gus \"Sousa-Mountain\" Romero",
+  "section": "Low Brass",
+  "instrument": "Tuba (sousaphone)",
+  "fightingStyle": "Heavy grappler. Grabs opponents and slams them, wraps them up in the sousaphone's bell loop and throws them, and lets out a low BWAAAMP blast that knocks fighters off their feet. Huge reach for throws, slow on his feet.",
+  "personality": "Gentle giant. Friendly, always hungry, and the first to help carry equipment. Becomes a different person when someone insults the low brass.",
+  "rivals": [
+    "drummer",
+    "bassclarinet"
+  ],
+  "whyTheyFight": "Tubas carry the heaviest instruments and get the least credit. Gus fights for respect for the low brass, and because the winner of Band Wars gets free food at the fast food place for the rest of the season.",
+  "taunt": "I carry thirty pounds of brass for fun. You're lighter.",
+  "winQuote": "That's the bass line. Everything sits on it, including you.",
+  "ending": "Gus wins the Golden Plume and the season of free food, then shares it with the whole low brass section. The fast food place puts his picture on the wall. Some say the booth he sat in still has a dent shaped like a sousaphone."
+}

@@ -1,0 +1,5 @@
+{
+  "type": "module",
+  "private": true,
+  "description": "Band Wars chiptune song modules. Tracks export a `song` object."
+}

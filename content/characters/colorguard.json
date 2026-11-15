@@ -1,0 +1,16 @@
+{
+  "id": "colorguard",
+  "name": "Jade \"Banner\" Castillo",
+  "section": "Color Guard",
+  "instrument": "Flag (and the occasional rifle toss)",
+  "fightingStyle": "Acrobatic and agile. Spinning flag sweeps, cartwheel kicks, a high air game and huge reach with the flagpole. Her special is a spinning flag toss that returns like a boomerang.",
+  "personality": "Energetic, fearless and a natural performer. Leads warm-up stretches in the locker room and isn't afraid to call anyone out, kindly but firmly.",
+  "rivals": [
+    "flute",
+    "trumpet"
+  ],
+  "whyTheyFight": "People say color guard isn't 'really' band. Jade wants to prove the guard are the hardest-working performers on the field, and to win the Golden Plume for the guard for the first time ever.",
+  "taunt": "Eight counts. You've got one left.",
+  "winQuote": "Caught it. Didn't even look.",
+  "ending": "Jade wins, and the color guard leads the band onto the field at the final home game, with flags snapping under the stadium lights. Nobody ever again asks whether guard is 'really' band."
+}

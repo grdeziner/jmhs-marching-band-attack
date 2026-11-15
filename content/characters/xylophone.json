@@ -1,0 +1,16 @@
+{
+  "id": "xylophone",
+  "name": "Penny \"Mallets\" Okafor",
+  "section": "Front Ensemble (Pit)",
+  "instrument": "Xylophone",
+  "fightingStyle": "Fast and technical. Fights with two pairs of mallet sticks in rapid rolls and flurries, ringing out a hit for every note in a scale. Her combos run up and down like arpeggios.",
+  "personality": "Bright, quick-talking and a bit of a perfectionist. Practices scales in the locker room before anyone else gets there and always knows exactly how many notes she just hit.",
+  "rivals": [
+    "drummer",
+    "flute"
+  ],
+  "whyTheyFight": "The pit stands on the sideline while everyone else marches, and Penny is tired of the front ensemble being called 'the furniture.' Winning Band Wars means the pit gets a real feature in the halftime show.",
+  "taunt": "Do-re-mi-fa-so-long!",
+  "winQuote": "Sixteen notes, sixteen hits. I counted.",
+  "ending": "With the Golden Plume in hand, Penny writes a halftime feature where the pit is wheeled to the 50-yard line under the lights. The crowd hears every bar ring out across the field. The drumline admits, grudgingly, that 'the furniture' can play."
+}

@@ -1,0 +1,16 @@
+{
+  "id": "drummer",
+  "name": "Marcus \"Thunder\" Boone",
+  "section": "Percussion (Battery)",
+  "instrument": "Bass drum",
+  "fightingStyle": "Heavy power hitter. Swings the bass drum like a shield, then strikes it with both mallets to send sound shockwaves rolling across the floor. Slow to start, but every hit lands like a downbeat.",
+  "personality": "Big, calm and steady, like a metronome. Says little and keeps everybody on tempo. Hates rushing.",
+  "rivals": [
+    "tuba",
+    "xylophone"
+  ],
+  "whyTheyFight": "The bass drum sets the pulse for the whole band, and Marcus thinks Band Wars has lost the beat. He wants to win so the drumline gets the last cadence on the football field at night, the one the whole stadium stomps along to.",
+  "taunt": "Feel that? That's the downbeat. You're behind it.",
+  "winQuote": "You rushed. I didn't. That's the whole lesson.",
+  "ending": "Marcus takes the Golden Plume and leads the season-closing cadence under the stadium lights. The bleachers stomp in time so hard the scoreboard shakes. Afterward the whole band follows his beat to the fast food place, and for once nobody argues about where to sit."
+}

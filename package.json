@@ -1,0 +1,6 @@
+{
+  "name": "jmhs-marching-band-attack",
+  "private": true,
+  "type": "module",
+  "scripts": { "build": "node build.js", "serve": "python3 -m http.server 8080", "test": "python3 tests/run_tests.py" }
+}

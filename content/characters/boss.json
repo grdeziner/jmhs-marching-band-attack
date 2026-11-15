@@ -1,0 +1,23 @@
+{
+  "id": "boss",
+  "name": "Major Discord",
+  "section": "Drum Major (former)",
+  "instrument": "Drum major's mace",
+  "fightingStyle": "Final boss. Commands the field with a spinning drum major's mace, fast whistle-blast projectiles and conducting gestures that throw the opponent's rhythm off (brief input delay). At low health he calls the 'Grand Finale,' a screen-wide salute shockwave.",
+  "personality": "Theatrical, dramatic and obsessed with perfection. Speaks only in marching commands. Believes the band has gotten 'sloppy' and that only he can restore order.",
+  "rivals": [
+    "drummer",
+    "xylophone",
+    "flute",
+    "tuba",
+    "trumpet",
+    "trombone",
+    "clarinet",
+    "bassclarinet",
+    "colorguard"
+  ],
+  "whyTheyFight": "Legend says Major Discord was a JMHS drum major years ago who lost the very first Band Wars and never got over it. Each season he returns to the football field at midnight to challenge the champion, and he claims the Golden Plume belongs to him.",
+  "taunt": "Band, ten-HUT! You're out of step.",
+  "winQuote": "Dismissed. Report to the locker room for remedial marching.",
+  "ending": "When he's defeated, Major Discord stands at attention, hands over his mace, and salutes the new champion. As the stadium lights flicker, he marches off into the dark end zone. Next year's sign-up sheet in the locker room has one extra name at the bottom, in old-fashioned handwriting."
+}
